@@ -1,9 +1,13 @@
 // Миссия «Учить цвета»: Тобот просит найти предмет нужного цвета («Найди красное яблоко!»).
-// Пул цветов растёт от миссии к миссии: 2 → 3 → 4 → … → все 8. Вариантов на экране от 2 до 6.
+// Пул цветов растёт от миссии к миссии: 4 → 5 → … → все 8. Вариантов на экране всегда 4.
 // Ошибка не наказывается: мягкий звук, подбадривание, после двух промахов или паузы — подсказка.
 import { sfx, confetti, once } from './fx.js';
 
-export const COLOR_ORDER = ['red', 'blue', 'yellow', 'green', 'orange', 'purple', 'pink', 'brown'];
+// порядок введения: сначала красный, зелёный, коричневый и синий, потом остальные
+export const COLOR_ORDER = ['red', 'green', 'brown', 'blue', 'yellow', 'orange', 'purple', 'pink'];
+// эти цвета выпадают чаще (в колоде по два раза)
+export const PRIORITY = ['red', 'green', 'brown'];
+export const OPTIONS = 4;   // вариантов ответа на экране
 export const COLOR_HEX = {
   red: '#e53935', blue: '#1e88e5', yellow: '#fdd835', green: '#43a047',
   orange: '#fb8c00', purple: '#8e24aa', pink: '#ec407a', brown: '#8d6e63',
@@ -17,7 +21,7 @@ const HINT_AFTER_MISSES = 2;
 const HINT_IDLE_MS = 9000;
 
 export function poolSize(missions) {
-  return Math.min(COLOR_ORDER.length, 2 + Math.max(0, missions | 0));
+  return Math.min(COLOR_ORDER.length, OPTIONS + Math.max(0, missions | 0));   // сразу 4 цвета, дальше по одному
 }
 
 function shuffle(arr, rng) {
@@ -31,7 +35,7 @@ function shuffle(arr, rng) {
 
 export function buildRound(missions, rng = Math.random, target = null) {
   const pool = COLOR_ORDER.slice(0, poolSize(missions));
-  const optionCount = Math.min(6, pool.length);
+  const optionCount = Math.min(OPTIONS, pool.length);
   if (!target) target = pool[Math.floor(rng() * pool.length)];
   const others = shuffle(pool.filter((c) => c !== target), rng).slice(0, optionCount - 1);
   return { target, options: shuffle([target, ...others], rng) };
@@ -47,8 +51,12 @@ export function runColorsMission({ host, strings: s, lang, missions, say, onCorr
   const pool = COLOR_ORDER.slice(0, poolSize(missions));
   function nextTarget() {
     if (!bag.length) {
-      bag = shuffle(pool, Math.random);
-      if (bag.length > 1 && bag[0] === last) bag.push(bag.shift());
+      const deck = pool.flatMap((c) => (PRIORITY.includes(c) ? [c, c] : [c]));
+      // перемешиваем, пока два одинаковых цвета не окажутся рядом (и первый не совпадёт с предыдущим)
+      for (let tries = 0; tries < 50; tries++) {
+        bag = shuffle(deck, Math.random);
+        if (bag[0] !== last && bag.every((c, i) => i === 0 || c !== bag[i - 1])) break;
+      }
     }
     last = bag.shift();
     return last;
