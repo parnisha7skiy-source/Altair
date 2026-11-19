@@ -1,0 +1,31 @@
+// Тексты игр на двух языках. Казахские варианты написаны не носителем — их нужно проверить.
+export const GT = {
+  ru: {
+    menuTitle: 'Выбери игру',
+    names: { colors: 'Цвета', counting: 'Считаем', shapes: 'Фигуры', animals: 'Кто как говорит', odd: 'Найди лишнего', memory: 'Найди пару', balloons: 'Шарики' },
+    countQ: 'Сколько {o}?',
+    countObjs: { apple: 'яблок', star: 'звёзд', fish: 'рыбок', balloon: 'шариков', car: 'машинок', chick: 'цыплят' },
+    shapeQ: 'Найди {o}!',
+    shapes: { circle: 'круг', square: 'квадрат', triangle: 'треугольник', star: 'звезду', heart: 'сердце' },
+    oddQ: 'Найди лишнего!',
+    animalQ: 'Кто говорит «{s}»?',
+    sounds: { cat: 'мяу', dog: 'гав-гав', cow: 'му-у', sheep: 'бе-е', frog: 'ква-ква' },
+    memoryQ: 'Найди пары!',
+    balloonQ: 'Лопай {o} шарики!',
+    balloonColors: { red: 'красные', blue: 'синие', yellow: 'жёлтые', green: 'зелёные', orange: 'оранжевые', purple: 'фиолетовые', pink: 'розовые', brown: 'коричневые' },
+  },
+  kk: {
+    menuTitle: 'Ойын таңда',
+    names: { colors: 'Түстер', counting: 'Санаймыз', shapes: 'Фигуралар', animals: 'Кім қалай дейді', odd: 'Артығын тап', memory: 'Жұбын тап', balloons: 'Шарлар' },
+    countQ: 'Қанша {o}?',
+    countObjs: { apple: 'алма', star: 'жұлдыз', fish: 'балық', balloon: 'шар', car: 'көлік', chick: 'балапан' },
+    shapeQ: '{o} тап!',
+    shapes: { circle: 'дөңгелекті', square: 'шаршыны', triangle: 'үшбұрышты', star: 'жұлдызды', heart: 'жүректі' },
+    oddQ: 'Артығын тап!',
+    animalQ: '«{s}» деп кім дейді?',
+    sounds: { cat: 'мияу', dog: 'әу-әу', cow: 'мө-ө', sheep: 'мә-ә', frog: 'бақ-бақ' },
+    memoryQ: 'Жұбын тап!',
+    balloonQ: '{o} шарларды жар!',
+    balloonColors: { red: 'Қызыл', blue: 'Көк', yellow: 'Сары', green: 'Жасыл', orange: 'Қызғылт сары', purple: 'Күлгін', pink: 'Қызғылт', brown: 'Қоңыр' },
+  },
+};
