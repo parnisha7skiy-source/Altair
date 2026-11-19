@@ -137,9 +137,9 @@ def synthesize_edge(voice, text, ptype, tries=3):
         raise RuntimeError("Установите библиотеку: pip install edge-tts")
     parts = split_sentences(text)
 
-    async def one(sent, rate, pitch):
+    async def one(sent, rate, hz):
         out = bytearray()
-        comm = edge_tts.Communicate(sent, voice, rate=f"{rate:+d}%", pitch=f"{int(round(pitch * 1.5)):+d}Hz")
+        comm = edge_tts.Communicate(sent, voice, rate=f"{rate:+d}%", pitch=f"{hz:+d}Hz")
         async for chunk in comm.stream():
             if chunk["type"] == "audio":
                 out += chunk["data"]
@@ -150,15 +150,20 @@ def synthesize_edge(voice, text, ptype, tries=3):
     audio = b""
     for i, sent in enumerate(parts):
         rate, pitch = sentence_prosody(ptype, sent, i, len(parts))
+        hz = int(round(pitch * 1.5))
+        # сервис иногда отвергает нестандартные значения («No audio was received»): пробуем всё проще и проще
+        attempts = [(rate, hz), (rate, min(hz, 30)), (min(rate, 2), min(hz, 30)), (min(rate, 2), 15), (0, 0)]
         last = None
-        for _ in range(tries):
+        for n, (r, h) in enumerate(attempts):
             try:
-                audio += asyncio.run(one(sent, rate, pitch))
+                audio += asyncio.run(one(sent, r, h))
+                if n:
+                    print(f"  (запасной вариант {n}: rate={r:+d}% pitch={h:+d}Hz) «{sent[:30]}»")
                 last = None
                 break
-            except Exception as e:  # сеть и сервис нестабильны: пробуем ещё раз
+            except Exception as e:
                 last = e
-                time.sleep(1.0)
+                time.sleep(0.7)
         if last:
             raise RuntimeError(f"edge-tts не смог озвучить «{sent[:40]}»: {last}")
         time.sleep(0.1)
