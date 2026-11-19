@@ -2,6 +2,7 @@
 export const GT = {
   ru: {
     menuTitle: 'Выбери игру',
+    labelsToggle: 'Помощь с цветами (подписи)',
     names: { colors: 'Цвета', counting: 'Считаем', shapes: 'Фигуры', animals: 'Кто как говорит', odd: 'Найди лишнего', memory: 'Найди пару', balloons: 'Шарики' },
     countQ: 'Сколько {o}?',
     countObjs: { apple: 'яблок', star: 'звёзд', fish: 'рыбок', balloon: 'шариков', car: 'машинок', chick: 'цыплят' },
@@ -16,6 +17,7 @@ export const GT = {
   },
   kk: {
     menuTitle: 'Ойын таңда',
+    labelsToggle: 'Түс көмегі (жазулар)',
     names: { colors: 'Түстер', counting: 'Санаймыз', shapes: 'Фигуралар', animals: 'Кім қалай дейді', odd: 'Артығын тап', memory: 'Жұбын тап', balloons: 'Шарлар' },
     countQ: 'Қанша {o}?',
     countObjs: { apple: 'алма', star: 'жұлдыз', fish: 'балық', balloon: 'шар', car: 'көлік', chick: 'балапан' },

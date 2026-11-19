@@ -33,16 +33,27 @@ function shuffle(arr, rng) {
   return a;
 }
 
-export function buildRound(missions, rng = Math.random, target = null) {
+// pairSafe: красный и зелёный не показываются вместе (их часто путают дети с особенностями цветового зрения)
+export function buildRound(missions, rng = Math.random, target = null, pairSafe = false) {
   const pool = COLOR_ORDER.slice(0, poolSize(missions));
   const optionCount = Math.min(OPTIONS, pool.length);
   if (!target) target = pool[Math.floor(rng() * pool.length)];
-  const others = shuffle(pool.filter((c) => c !== target), rng).slice(0, optionCount - 1);
+  let others = shuffle(pool.filter((c) => c !== target), rng);
+  if (pairSafe) {
+    if (target === 'red') others = others.filter((c) => c !== 'green');
+    if (target === 'green') others = others.filter((c) => c !== 'red');
+    if (target !== 'red' && target !== 'green') {
+      // если оба из пары попали в варианты, убираем один из них
+      const both = others.includes('red') && others.includes('green');
+      if (both) { const drop = rng() < 0.5 ? 'red' : 'green'; others = others.filter((c) => c !== drop); }
+    }
+  }
+  others = others.slice(0, optionCount - 1);
   return { target, options: shuffle([target, ...others], rng) };
 }
 
 // say(type, text|null): text=null — Тобот сам выбирает реплику типа из content/phrases.json
-export function runColorsMission({ host, strings: s, lang, missions, say, onCorrect, onFinish, onClose }) {
+export function runColorsMission({ host, strings: s, lang, missions, say, onCorrect, onFinish, onClose, labels = false, pairSafe = false }) {
   const promptFor = (c) => s.promptColor.replace('{o}', s.objects[c]);
   let round = 0, stars = 0, misses = 0, busy = true, target = null, timers = [], idle = null;
 
@@ -91,12 +102,12 @@ export function runColorsMission({ host, strings: s, lang, missions, say, onCorr
   }
 
   function ask() {
-    const { target: tg, options } = buildRound(missions, Math.random, nextTarget());
+    const { target: tg, options } = buildRound(missions, Math.random, nextTarget(), pairSafe);
     target = tg; misses = 0; busy = false;
     renderStars();
     q('grid').style.gridTemplateColumns = `repeat(${options.length <= 4 ? 2 : 3}, 1fr)`;
     q('grid').innerHTML = options.map((c) =>
-      `<button class="mopt" data-c="${c}" style="background:${COLOR_HEX[c]}" aria-label="${s.colorNames[c]}"><span>${COLOR_EMOJI[c]}</span></button>`
+      `<button class="mopt" data-c="${c}" style="background:${COLOR_HEX[c]}" aria-label="${s.colorNames[c]}"><span>${COLOR_EMOJI[c]}</span>${labels ? `<em class="mlabel">${s.colorNames[c]}</em>` : ''}</button>`
     ).join('');
     say('explain', promptFor(target));
     armIdle();

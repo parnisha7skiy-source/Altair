@@ -68,6 +68,8 @@
   .btn.game { display:flex; flex-direction:column; align-items:center; gap:4px; background:#eef6ff; }
   .btn.game .gi { font-size:34px; }
   .mopt.card-back { background:#2a7bff; color:#fff; }
+  .mopt { flex-direction:column; }
+  .mlabel { font-style:normal; font-size:clamp(14px,4vw,18px); font-weight:900; color:#fff; text-shadow:0 1px 3px rgba(0,0,0,.45); margin-top:4px; }
   .mopt.card-up { background:#fff; }
   .mopt.done { opacity:.85; }
   .mission.air { top:0; height:auto; max-width:none; max-height:none; background:transparent; box-shadow:none; border-radius:0; padding-top:calc(env(safe-area-inset-top) + 12px); pointer-events:none; overflow:hidden; }
@@ -131,6 +133,7 @@
   <div class="card">
     <h2 id="menuTitle"></h2>
     <div class="menu-grid" id="menuGrid"></div>
+    <button class="btn" id="labelToggle" style="width:100%;margin-top:10px"></button>
     <button class="close" id="closeMenu" data-k="close">Закрыть</button>
   </div>
 </div>
@@ -356,6 +359,7 @@ function startAdventure() {
 }
 function renderMenu() {
   $('menuTitle').textContent = GT[lang].menuTitle;
+  renderLabelToggle();
   $('menuGrid').innerHTML = GAMES.map((g) =>
     `<button class="btn game" data-g="${g.id}"><span class="gi">${g.emoji}</span>${gameName(lang, g.id)}</button>`).join('');
 }
@@ -369,6 +373,13 @@ $('menu').onclick = (e) => { if (e.target.id === 'menu') $('menu').classList.rem
 $('closeMenu').onclick = () => $('menu').classList.remove('show');
 $('colorsBtn').onclick = () => startGame('colors');
 $('playBtn').onclick = () => { renderMenu(); $('menu').classList.add('show'); };
+// переключатель «помощь с цветами» в меню: подписи под цветами и без красного рядом с зелёным
+function renderLabelToggle() {
+  $('labelToggle').textContent = (progress.colorLabels ? '✅ ' : '⬜ ') + GT[lang].labelsToggle;
+}
+$('labelToggle').onclick = () => {
+  progress.colorLabels = !progress.colorLabels; saveProgress(); renderLabelToggle();
+};
 $('startBtn').onclick = startAdventure;
 function showSplash() { document.body.classList.add('splash'); $('splash').classList.add('show'); resize(); }
 $('enterBtn').onclick = () => {
