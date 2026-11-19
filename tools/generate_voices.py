@@ -29,8 +29,10 @@ import asyncio
 import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
+import time
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -50,13 +52,13 @@ VOICES = {
 
 # Характер по типу реплики: темп и тон в процентах относительно обычного голоса.
 PROSODY = {
-    "greeting":  {"rate": "-4%",  "pitch": "+10%"},
-    "talk":      {"rate": "-6%",  "pitch": "+4%"},
-    "joy":       {"rate": "+2%",  "pitch": "+14%"},
-    "encourage": {"rate": "-12%", "pitch": "+2%"},
-    "surprise":  {"rate": "-10%", "pitch": "+16%"},
-    "explain":   {"rate": "-14%", "pitch": "+0%"},
-    "victory":   {"rate": "-2%",  "pitch": "+14%"},
+    "greeting":  {"rate": "+4%",  "pitch": "+10%"},
+    "talk":      {"rate": "-2%",  "pitch": "+4%"},
+    "joy":       {"rate": "+8%",  "pitch": "+14%"},
+    "encourage": {"rate": "-8%",  "pitch": "+4%"},
+    "surprise":  {"rate": "+2%",  "pitch": "+18%"},
+    "explain":   {"rate": "-8%",  "pitch": "+2%"},
+    "victory":   {"rate": "+6%",  "pitch": "+14%"},
 }
 
 # Эмоциональные стили Azure (express-emotion). Не все голоса их поддерживают.
@@ -103,19 +105,41 @@ def synthesize(region, key, ssml):
         raise RuntimeError(f"Azure ответил {e.code}: {e.read().decode('utf-8', 'replace')[:300]}")
 
 
+def _pct(x):
+    return int(x.rstrip("%"))
+
+
+def sentence_prosody(ptype, sent, idx, total):
+    """Интонация одного предложения: восклицания выше и быстрее, вопросы с подъёмом, короткие «Ура!» ярче."""
+    p = PROSODY.get(ptype, PROSODY["talk"])
+    rate, pitch = _pct(p["rate"]), _pct(p["pitch"])
+    s = sent.strip()
+    if s.endswith("!"):
+        pitch += 8; rate += 4
+    elif s.endswith("?"):
+        pitch += 10; rate -= 3
+    if len(s.split()) <= 3 and s.endswith(("!", "?")):
+        pitch += 8; rate += 4          # «Ура!», «Ой!», «Ух ты!»
+    if idx == total - 1 and ptype in ("explain", "encourage", "victory"):
+        rate -= 4                      # концовка чуть медленнее и яснее
+    return max(-30, min(25, rate)), max(-10, min(28, pitch))
+
+
+def split_sentences(text):
+    return [x.strip() for x in re.findall(r"[^.!?…]+[.!?…]*", text) if x.strip()] or [text]
+
+
 def synthesize_edge(voice, text, ptype, tries=3):
-    """edge-tts: темп в процентах, тон в герцах (примерно 2 Гц на 1% из PROSODY)."""
+    """edge-tts: каждое предложение отдельно со своим темпом и тоном (в Гц, ~1.5 Гц на 1%), потом склеиваем MP3."""
     try:
         import edge_tts
     except ImportError:
         raise RuntimeError("Установите библиотеку: pip install edge-tts")
-    p = PROSODY.get(ptype, PROSODY["talk"])
-    hz = int(round(int(p["pitch"].rstrip("%")) * 2))
-    pitch = f"{hz:+d}Hz"
+    parts = split_sentences(text)
 
-    async def run():
+    async def one(sent, rate, pitch):
         out = bytearray()
-        comm = edge_tts.Communicate(text, voice, rate=p["rate"], pitch=pitch)
+        comm = edge_tts.Communicate(sent, voice, rate=f"{rate:+d}%", pitch=f"{int(round(pitch * 1.5)):+d}Hz")
         async for chunk in comm.stream():
             if chunk["type"] == "audio":
                 out += chunk["data"]
@@ -123,13 +147,22 @@ def synthesize_edge(voice, text, ptype, tries=3):
             raise RuntimeError("сервис вернул пустой звук")
         return bytes(out)
 
-    last = None
-    for _ in range(tries):
-        try:
-            return asyncio.run(run())
-        except Exception as e:  # сеть и сервис нестабильны: пробуем ещё раз
-            last = e
-    raise RuntimeError(f"edge-tts не смог озвучить «{text[:40]}»: {last}")
+    audio = b""
+    for i, sent in enumerate(parts):
+        rate, pitch = sentence_prosody(ptype, sent, i, len(parts))
+        last = None
+        for _ in range(tries):
+            try:
+                audio += asyncio.run(one(sent, rate, pitch))
+                last = None
+                break
+            except Exception as e:  # сеть и сервис нестабильны: пробуем ещё раз
+                last = e
+                time.sleep(1.0)
+        if last:
+            raise RuntimeError(f"edge-tts не смог озвучить «{sent[:40]}»: {last}")
+        time.sleep(0.1)
+    return audio
 
 
 def main():
@@ -177,7 +210,7 @@ def main():
         file_abs = ROOT / file_rel
         pr = PROSODY.get(ptype, PROSODY["talk"])
         sig = hashlib.sha1(
-            "|".join([engine, voice, str(args.styles and engine == "azure"), ptype, text, pr["rate"], pr["pitch"]]).encode("utf-8")
+            "|".join(["emo2", engine, voice, str(args.styles and engine == "azure"), ptype, text, pr["rate"], pr["pitch"]]).encode("utf-8")
         ).hexdigest()[:12]
         if not args.force and file_abs.exists() and manifest.get(rid, {}).get("hash") == sig:
             skipped += 1

@@ -9,11 +9,11 @@ const last = {};
 
 export async function loadPhrases(base = './') {
   const [data, manifest] = await Promise.all([
-    fetch(base + 'content/phrases.json').then((r) => {
+    fetch(base + 'content/phrases.json', { cache: 'no-store' }).then((r) => {
       if (!r.ok) throw new Error('phrases.json: ' + r.status);
       return r.json();
     }),
-    fetch(base + 'audio/manifest.json').then((r) => (r.ok ? r.json() : {})).catch(() => ({})),
+    fetch(base + 'audio/manifest.json', { cache: 'no-store' }).then((r) => (r.ok ? r.json() : {})).catch(() => ({})),
   ]);
   DATA = data;
   MANIFEST = manifest;
@@ -27,7 +27,7 @@ export function audioReady(lang) {
 // озвучка задания игры по точному тексту (ключ манифеста prompt|<язык>|<текст>)
 export function audioForText(lang, text) {
   const e = MANIFEST[`prompt|${lang}|${text}`];
-  return e ? e.file : null;
+  return e ? e.file + '?v=' + e.hash : null;
 }
 
 function nextIndex(key, n) {
@@ -57,7 +57,7 @@ export function pickLine(lang, type) {
     lang,
     type: realType,
     text: arr[i].replace(/\{name\}/g, DATA.name),
-    audio: entry ? entry.file : null,
+    audio: entry ? entry.file + '?v=' + entry.hash : null,   // хэш в адресе: после перезаписи озвучки старый файл из кэша не играет
   };
 }
 

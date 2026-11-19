@@ -283,6 +283,8 @@ addEventListener('resize', resize); resize();
 // ---------- Тобот
 // модель лежит в models/; её можно заменить новым файлом с теми же именами клипов
 const tobot = new TobotCharacter({ url: './models/tobot.glb' });
+// первое касание «разблокирует» звук на iPhone (до обработчиков кнопок)
+document.addEventListener('click', () => tobot.unlockAudio(), { capture: true, once: true });
 scene.add(tobot.root);
 
 let hintShown = true;

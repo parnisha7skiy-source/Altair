@@ -127,8 +127,7 @@ export class TobotCharacter {
   /**
    * Реплика определённого типа (greeting, talk, joy, encourage, surprise, explain, victory).
    * Тело: эмоциональный клип типа (Greeting/Happy/Victory/…), после него — Talking до конца речи, затем Idle.
-   * Рот: если у реплики есть аудиофайл — по реальной громкости звука (WebAudio);
-   *      при синтезе речи (Web Speech не отдаёт звук) — по границам слов + слоговой ритм.
+   * Рот: слоговой ритм (+ толчки по границам слов при системном голосе).
    */
   say(type, line, { onend } = {}) {
     const style = VOICE_STYLES[type] || VOICE_STYLES.talk;
@@ -172,26 +171,37 @@ export class TobotCharacter {
   /** Совместимость: обычная речь. */
   speak(text, opts = {}) { return this.say('talk', text, opts); }
 
+  /**
+   * iPhone разрешает звук только элементу, который был запущен по касанию. Поэтому у Тобота ОДИН постоянный
+   * аудиоэлемент: его «разблокируем» первым касанием и дальше только меняем src. Новый Audio() на каждую
+   * реплику (как было раньше) на iPhone молчал или обрывался, когда реплику запускал таймер.
+   */
+  unlockAudio() {
+    if (this._unlocked) return;
+    this._unlocked = true;
+    const el = this._el || (this._el = new Audio());
+    el.playsInline = true;
+    el.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=';
+    // пустой звук закончится сам; не вызываем pause(), чтобы не остановить реплику, которая стартует сразу после касания
+    el.play().catch(() => {});
+    try { if (this.voice.supported) this.voice.synth.speak(new SpeechSynthesisUtterance('')); } catch (e) {}
+  }
+
   async _playAudio(url, onend) {
-    const el = new Audio(url);
+    const el = this._el || (this._el = new Audio());
+    el.onended = null;
+    el.pause();
+    el.src = url;
     el.volume = this.voice.volume;
-    el.crossOrigin = 'anonymous';
-    try {
-      this._ctx = this._ctx || new (window.AudioContext || window.webkitAudioContext)();
-      if (this._ctx.state === 'suspended') this._ctx.resume();
-      const src = this._ctx.createMediaElementSource(el);
-      const an = this._ctx.createAnalyser(); an.fftSize = 512;
-      src.connect(an); an.connect(this._ctx.destination);
-      this._analyser = an; this._abuf = new Uint8Array(an.fftSize);
-    } catch (e) { this._analyser = null; }
     el.onended = onend;
+    el.onerror = () => onend && onend();
     this._audioEl = el;
     await el.play();
   }
 
   stopSpeaking() {
     this.voice.stop();
-    if (this._audioEl) { this._audioEl.pause(); this._audioEl = null; }
+    if (this._audioEl) { this._audioEl.onended = null; this._audioEl.onerror = null; this._audioEl.pause(); this._audioEl = null; }
     this._analyser = null;
     if (this.speaking) {
       this.speaking = false; this._mouthTarget = 0;
