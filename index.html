@@ -341,11 +341,13 @@ function startGame(id, { adventure = false } = {}) {
       if (adventure) progress.adv = (progress.adv || 0) + 1;
       saveProgress(); renderProgress();
     },
-    onClose: () => {
+    onClose: (next) => {
       activeMission = null;
       document.body.classList.remove('mission-on'); setMissionView(false);
       tobot.stopSpeaking();
       hideBubbleLater();
+      // в приключении «Дальше» сразу запускает следующую игру; крестик возвращает на главный экран
+      if (adventure && next) setTimeout(startAdventure, 250);
     },
   });
 }

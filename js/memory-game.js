@@ -49,11 +49,12 @@ export function runMemory({ host, lang, gt, level, say, onCorrect, onFinish, onC
     onFinish();
   }
 
-  function close() { timers.forEach(clearTimeout); timers = []; root.remove(); onClose && onClose(); }
+  function close(next) { timers.forEach(clearTimeout); timers = []; root.remove(); onClose && onClose(!!next); }
 
   root.addEventListener('click', (e) => {
     const t = e.target;
-    if (t.closest('[data-role="exit"]') || t.closest('[data-role="next"]')) return close();
+    if (t.closest('[data-role="exit"]')) return close(false);
+    if (t.closest('[data-role="next"]')) return close(true);
     if (t.closest('[data-role="repeat"]')) { sfx.tap(); say('explain', gt.memoryQ); return; }
     const btn = t.closest('.mopt');
     if (!btn || lock || btn.classList.contains('card-up') || btn.classList.contains('done')) return;

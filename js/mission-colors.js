@@ -135,16 +135,17 @@ export function runColorsMission({ host, strings: s, lang, missions, say, onCorr
     onFinish();
   }
 
-  function close() {
+  function close(next) {
     clearTimeout(idle);
     timers.forEach(clearTimeout); timers = [];
     root.remove();
-    onClose && onClose();
+    onClose && onClose(!!next);
   }
 
   root.addEventListener('click', (e) => {
     const t = e.target;
-    if (t.closest('[data-role="exit"]') || t.closest('[data-role="next"]')) return close();
+    if (t.closest('[data-role="exit"]')) return close(false);
+    if (t.closest('[data-role="next"]')) return close(true);
     if (t.closest('[data-role="repeat"]')) { sfx.tap(); if (target && !busy) say('explain', promptFor(target)); return; }
     const opt = t.closest('.mopt');
     if (opt && !busy) choose(opt);

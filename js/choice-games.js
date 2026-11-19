@@ -155,15 +155,16 @@ export function runChoice({ host, lang, gt, id, level, say, onCorrect, onFinish,
     onFinish();
   }
 
-  function close() {
+  function close(next) {
     clearTimeout(idle); timers.forEach(clearTimeout); timers = [];
     root.remove();
-    onClose && onClose();
+    onClose && onClose(!!next);
   }
 
   root.addEventListener('click', (e) => {
     const t = e.target;
-    if (t.closest('[data-role="exit"]') || t.closest('[data-role="next"]')) return close();
+    if (t.closest('[data-role="exit"]')) return close(false);
+    if (t.closest('[data-role="next"]')) return close(true);
     if (t.closest('[data-role="repeat"]')) { sfx.tap(); if (cur && !busy) say('explain', cur.prompt); return; }
     const opt = t.closest('.mopt');
     if (opt && !busy) choose(opt);

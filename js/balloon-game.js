@@ -69,9 +69,9 @@ export function runBalloons({ host, lang, gt, level, say, onCorrect, onFinish, o
     onFinish();
   }
 
-  function close() {
+  function close(next) {
     over = true; clearTimeout(spawnT); clearTimeout(idle); timers.forEach(clearTimeout);
-    root.remove(); onClose && onClose();
+    root.remove(); onClose && onClose(!!next);
   }
 
   root.addEventListener('pointerdown', (e) => {
@@ -92,7 +92,8 @@ export function runBalloons({ host, lang, gt, level, say, onCorrect, onFinish, o
   });
   root.addEventListener('click', (e) => {
     const t = e.target;
-    if (t.closest('[data-role="exit"]') || t.closest('[data-role="next"]')) return close();
+    if (t.closest('[data-role="exit"]')) return close(false);
+    if (t.closest('[data-role="next"]')) return close(true);
     if (t.closest('[data-role="repeat"]')) { sfx.tap(); lastTalk = Date.now(); say('explain', prompt); }
   });
 
