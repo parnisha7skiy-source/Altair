@@ -79,6 +79,10 @@
   .balloon::after { content:""; position:absolute; left:50%; top:100%; width:2px; height:40px; background:rgba(22,50,92,.5); }
   .balloon.pop { transform:scale(1.6); opacity:0; transition:transform .15s, opacity .15s; }
   .balloon.shake { animation:wob .4s; }
+  #splash { position:fixed; inset:0; z-index:8; display:none; align-items:flex-end; justify-content:center; padding:0 14px calc(env(safe-area-inset-bottom) + 40px); }
+  #splash.show { display:flex; }
+  #splash .btn.go { width:100%; max-width:420px; grid-column:auto; }
+  body.splash .bottom, body.splash .hint { display:none; }
   #err { display:none; position:fixed; left:6%; right:6%; top:30%; background:#fff; border-radius:16px; padding:16px; box-shadow:0 8px 30px rgba(0,0,0,.3); font-size:15px; z-index:9; }
   #err.show { display:block; }
 </style>
@@ -130,6 +134,8 @@
     <button class="close" id="closeMenu" data-k="close">Закрыть</button>
   </div>
 </div>
+
+<div id="splash"><button class="btn go" id="enterBtn" data-k="enter">Войти</button></div>
 
 <div class="toast" id="toast"></div>
 <div id="err"></div>
@@ -197,7 +203,9 @@ function toast(text, ms = 2600) {
   clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), ms);
 }
 let bubbleT = null;
+const SUBTITLES = false;   // субтитры над Тоботом перекрывали его; включить можно здесь
 function showBubble(text) {
+  if (!SUBTITLES) return;
   const b = $('bubble'); b.textContent = text; b.classList.add('show');
   clearTimeout(bubbleT);
 }
@@ -329,6 +337,11 @@ $('closeMenu').onclick = () => $('menu').classList.remove('show');
 $('colorsBtn').onclick = () => startGame('colors');
 $('playBtn').onclick = () => { renderMenu(); $('menu').classList.add('show'); };
 $('startBtn').onclick = startAdventure;
+function showSplash() { document.body.classList.add('splash'); $('splash').classList.add('show'); }
+$('enterBtn').onclick = () => {
+  $('splash').classList.remove('show'); document.body.classList.remove('splash');
+  greet();
+};
 $('rewardsBtn').onclick = () => { renderProgress(); $('sheet').classList.add('show'); };
 $('closeSheet').onclick = () => $('sheet').classList.remove('show');
 $('sheet').onclick = (e) => { if (e.target.id === 'sheet') $('sheet').classList.remove('show'); };
@@ -337,7 +350,7 @@ $('langBtn').onclick = () => {
   if (activeMission) activeMission.close();
   saveLang(lang); noVoiceShown = false;
   applyLang(); renderMenu();
-  greet();
+  if (!$('splash').classList.contains('show')) greet();
 };
 
 // ---------- старт
@@ -361,6 +374,8 @@ try {
   $('err').innerHTML = '<b>Не удалось загрузить Тобота</b><br>' + (e && e.message ? e.message : e);
   $('err').classList.add('show');
 }
+
+showSplash();
 
 const clock = new THREE.Clock();
 let frames = 0, acc = 0, lowSecs = 0;

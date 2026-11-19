@@ -1,6 +1,12 @@
 name: Озвучка Тобота
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'content/phrases.json'
+      - 'js/i18n.js'
+      - 'js/game-text.js'
   workflow_dispatch:
     inputs:
       force:
@@ -14,6 +20,10 @@ on:
 
 permissions:
   contents: write
+
+concurrency:
+  group: voices
+  cancel-in-progress: false
 
 jobs:
   voices:
@@ -34,8 +44,8 @@ jobs:
         env:
           AZURE_SPEECH_KEY: ${{ secrets.AZURE_SPEECH_KEY }}
           AZURE_SPEECH_REGION: ${{ secrets.AZURE_SPEECH_REGION }}
-          FORCE: ${{ inputs.force }}
-          STYLES: ${{ inputs.styles }}
+          FORCE: ${{ inputs.force || 'false' }}
+          STYLES: ${{ inputs.styles || 'false' }}
         run: |
           ARGS=""
           if [ "$FORCE" = "true" ]; then ARGS="$ARGS --force"; fi
@@ -51,5 +61,6 @@ jobs:
             echo "Изменений в озвучке нет"
           else
             git commit -m "Озвучка: обновлены реплики"
+            git pull --rebase origin main
             git push
           fi
