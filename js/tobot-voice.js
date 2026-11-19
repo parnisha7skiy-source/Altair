@@ -47,6 +47,13 @@ export class TobotVoice {
     });
   }
 
+  /** Есть ли на устройстве голос для языка (ru, kk). Казахский часто отсутствует — тогда показываем текст. */
+  hasVoiceFor(lang) {
+    if (!this.supported) return false;
+    const code = lang === 'kk' ? 'kk' : 'ru';
+    return this.synth.getVoices().some((v) => v.lang && v.lang.toLowerCase().startsWith(code));
+  }
+
   /** Все русские голоса с пометкой «мужской?» и оценкой. */
   list() {
     if (!this.supported) return [];
@@ -100,16 +107,17 @@ export class TobotVoice {
    * Произнести. Все фразы ставятся в очередь синхронно — это важно для iPhone,
    * где речь разрешена только в ответ на касание.
    */
-  speak(text, styleKey = 'talk', { onstart, onboundary, onend } = {}) {
+  speak(text, styleKey = 'talk', { onstart, onboundary, onend, lang = 'ru' } = {}) {
     this.stop();
-    if (!this.supported) { onend && setTimeout(onend, Math.max(1200, text.length * 70)); return false; }
+    if (!this.supported || !this.hasVoiceFor(lang)) { onend && setTimeout(onend, Math.max(1200, text.length * 70)); return false; }
     const plan = this.plan(text, styleKey);
     let finished = false;
     const end = () => { if (!finished) { finished = true; onend && onend(); } };
     plan.forEach((ph, i) => {
       const u = new SpeechSynthesisUtterance(ph.text);
-      u.lang = 'ru-RU'; u.pitch = ph.pitch; u.rate = ph.rate; u.volume = this.volume;
-      if (this.voice) u.voice = this.voice;
+      u.lang = lang === 'kk' ? 'kk-KZ' : 'ru-RU'; u.pitch = ph.pitch; u.rate = ph.rate; u.volume = this.volume;
+      const match = this.synth.getVoices().find((v) => v.lang && v.lang.toLowerCase().startsWith(lang === 'kk' ? 'kk' : 'ru'));
+      if (lang === 'kk' ? match : this.voice) u.voice = lang === 'kk' ? match : this.voice;
       if (i === 0) u.onstart = () => onstart && onstart();
       u.onboundary = () => onboundary && onboundary();
       if (i === plan.length - 1) { u.onend = end; }

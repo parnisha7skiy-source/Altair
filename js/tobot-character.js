@@ -127,10 +127,10 @@ export class TobotCharacter {
       if (onend) onend();
     };
     if (audio) {
-      this._playAudio(audio, finish).catch(() => this.voice.speak(text, type, { onboundary: () => (this._mouthPulse = 1), onend: finish }));
+      this._playAudio(audio, finish).catch(() => this.voice.speak(text, type, { lang: line.lang || 'ru', onboundary: () => (this._mouthPulse = 1), onend: finish }));
       return { audio: true, file: audio };
     }
-    const ok = this.voice.speak(text, type, { onboundary: () => (this._mouthPulse = 1), onend: finish });
+    const ok = this.voice.speak(text, type, { lang: line.lang || 'ru', onboundary: () => (this._mouthPulse = 1), onend: finish });
     return { audio: ok, ...this.voice.status() };
   }
 
