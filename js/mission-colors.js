@@ -1,15 +1,21 @@
-// Миссия «Учить цвета»: Тобот называет цвет, ребёнок находит его среди вариантов.
-// Пул цветов растёт от миссии к миссии: 2 → 3 → 4 → … → все 8.
-// Вариантов ответа на экране от 2 до 6. Ошибка не наказывается: показываем подсказку и даём попробовать снова.
+// Миссия «Учить цвета»: Тобот просит найти предмет нужного цвета («Найди красное яблоко!»).
+// Пул цветов растёт от миссии к миссии: 2 → 3 → 4 → … → все 8. Вариантов на экране от 2 до 6.
+// Ошибка не наказывается: мягкий звук, подбадривание, после двух промахов или паузы — подсказка.
+import { sfx, confetti } from './fx.js';
 
 export const COLOR_ORDER = ['red', 'blue', 'yellow', 'green', 'orange', 'purple', 'pink', 'brown'];
 export const COLOR_HEX = {
   red: '#e53935', blue: '#1e88e5', yellow: '#fdd835', green: '#43a047',
   orange: '#fb8c00', purple: '#8e24aa', pink: '#ec407a', brown: '#8d6e63',
 };
+// предмет каждого цвета: ребёнок видит картинку, а слово слышит от Тобота
+export const COLOR_EMOJI = {
+  red: '🍎', blue: '🐳', yellow: '🍌', green: '🐸', orange: '🍊', purple: '🍇', pink: '🐷', brown: '🐻',
+};
 export const ROUNDS = 5;
+const HINT_AFTER_MISSES = 2;
+const HINT_IDLE_MS = 9000;
 
-// сколько цветов доступно при данном числе пройденных миссий
 export function poolSize(missions) {
   return Math.min(COLOR_ORDER.length, 2 + Math.max(0, missions | 0));
 }
@@ -23,8 +29,6 @@ function shuffle(arr, rng) {
   return a;
 }
 
-// один раунд: загаданный цвет и варианты (всегда содержат загаданный)
-// target можно передать заранее (см. колоду в runColorsMission)
 export function buildRound(missions, rng = Math.random, target = null) {
   const pool = COLOR_ORDER.slice(0, poolSize(missions));
   const optionCount = Math.min(6, pool.length);
@@ -33,16 +37,12 @@ export function buildRound(missions, rng = Math.random, target = null) {
   return { target, options: shuffle([target, ...others], rng) };
 }
 
-// Запускает миссию внутри host. strings — UI[lang] из i18n.js.
-// say(type, text) — озвучка и субтитры через Тобота (см. index.html).
-// onCorrect(color) — засчитать цвет и звезду. onFinish() — миссия пройдена.
-// onClose() — игрок закрыл миссию (в том числе досрочно).
+// say(type, text|null): text=null — Тобот сам выбирает реплику типа из content/phrases.json
 export function runColorsMission({ host, strings: s, lang, missions, say, onCorrect, onFinish, onClose }) {
-  const name = (c) => s.colorNames[c];
-  const promptFor = (c) => s.promptColor.replace('{c}', name(c));
-  let round = 0, stars = 0, busy = true, target = null, timers = [];
-  // колода: каждый цвет выпадает по одному разу, потом колода перемешивается заново;
-  // первый цвет новой колоды не совпадает с предыдущим
+  const promptFor = (c) => s.promptColor.replace('{o}', s.objects[c]);
+  let round = 0, stars = 0, misses = 0, busy = true, target = null, timers = [], idle = null;
+
+  // колода: каждый цвет по одному разу, затем перемешиваем; подряд одинаковых нет
   let bag = [], last = null;
   const pool = COLOR_ORDER.slice(0, poolSize(missions));
   function nextTarget() {
@@ -59,80 +59,84 @@ export function runColorsMission({ host, strings: s, lang, missions, say, onCorr
   root.setAttribute('lang', lang);
   root.innerHTML = `
     <div class="mtop">
-      <div class="pill" data-role="round"></div>
+      <div class="mstars" data-role="stars"></div>
       <button class="pill btnlike" data-role="repeat" aria-label="🔊">🔊</button>
-      <div class="pill" data-role="stars"></div>
       <button class="pill btnlike" data-role="exit" aria-label="✕">✕</button>
     </div>
-    <div class="mprompt" data-role="prompt"></div>
     <div class="mgrid" data-role="grid"></div>
     <div class="mresult" data-role="result" hidden></div>`;
   host.appendChild(root);
   const q = (role) => root.querySelector(`[data-role="${role}"]`);
 
   function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
+  function renderStars() {
+    q('stars').textContent = '⭐'.repeat(stars) + '☆'.repeat(ROUNDS - stars);
+  }
+  function hint() {
+    const el = root.querySelector(`.mopt[data-c="${target}"]`);
+    if (el) el.classList.add('hint');
+    say('explain', promptFor(target));
+  }
+  function armIdle() {
+    clearTimeout(idle);
+    idle = setTimeout(() => { if (!busy) hint(); armIdle(); }, HINT_IDLE_MS);
+  }
 
   function ask() {
     const { target: tg, options } = buildRound(missions, Math.random, nextTarget());
-    target = tg;
-    busy = false;
-    q('round').textContent = `${round + 1}/${ROUNDS}`;
-    q('stars').textContent = '⭐ ' + stars;
-    q('prompt').textContent = promptFor(target);
-    const cols = options.length <= 4 ? 2 : 3;
-    q('grid').style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+    target = tg; misses = 0; busy = false;
+    renderStars();
+    q('grid').style.gridTemplateColumns = `repeat(${options.length <= 4 ? 2 : 3}, 1fr)`;
     q('grid').innerHTML = options.map((c) =>
-      `<button class="mopt" data-c="${c}" style="background:${COLOR_HEX[c]}" aria-label="${name(c)}"></button>`
+      `<button class="mopt" data-c="${c}" style="background:${COLOR_HEX[c]}" aria-label="${s.colorNames[c]}"><span>${COLOR_EMOJI[c]}</span></button>`
     ).join('');
     say('explain', promptFor(target));
+    armIdle();
   }
 
   function choose(btn) {
     const c = btn.dataset.c;
     if (c === target) {
-      busy = true;
+      busy = true; clearTimeout(idle);
       btn.classList.add('ok');
-      stars++;
-      q('stars').textContent = '⭐ ' + stars;
+      stars++; renderStars();
+      sfx.ok(); confetti(24);
       onCorrect(c);
-      say('joy', s.praise);
-      later(() => {
-        round++;
-        if (round >= ROUNDS) finish(); else ask();
-      }, 1400);
+      say('joy', null);
+      later(() => { round++; if (round >= ROUNDS) finish(); else ask(); }, 2300);
     } else {
-      btn.classList.remove('miss');
-      void btn.offsetWidth; // перезапуск анимации при повторной ошибке
-      btn.classList.add('miss');
-      say('encourage', s.tryAgain);
+      sfx.miss();
+      btn.classList.remove('miss'); void btn.offsetWidth; btn.classList.add('miss');
+      misses++;
+      say('encourage', null);
+      if (misses >= HINT_AFTER_MISSES) later(hint, 1800);
+      armIdle();
     }
   }
 
   function finish() {
-    busy = true;
-    say('victory', s.missionDone);
-    q('prompt').textContent = '';
+    busy = true; clearTimeout(idle);
+    sfx.win(); confetti(70);
+    say('victory', null);
     q('grid').innerHTML = '';
-    q('round').textContent = `${ROUNDS}/${ROUNDS}`;
     const res = q('result');
     res.hidden = false;
-    res.innerHTML = `<h2>${s.missionDone}</h2><p>${s.missionStars.replace('{n}', stars)}</p>` +
+    res.innerHTML = `<div class="big">🏆</div><h2>${s.missionDone}</h2><p>${'⭐'.repeat(ROUNDS)}</p>` +
       `<button class="close" data-role="next">${s.next}</button>`;
     onFinish();
   }
 
   function close() {
-    timers.forEach(clearTimeout);
-    timers = [];
+    clearTimeout(idle);
+    timers.forEach(clearTimeout); timers = [];
     root.remove();
     onClose && onClose();
   }
 
   root.addEventListener('click', (e) => {
     const t = e.target;
-    if (t.closest('[data-role="exit"]')) return close();
-    if (t.closest('[data-role="next"]')) return close();
-    if (t.closest('[data-role="repeat"]')) { if (target) say('explain', promptFor(target)); return; }
+    if (t.closest('[data-role="exit"]') || t.closest('[data-role="next"]')) return close();
+    if (t.closest('[data-role="repeat"]')) { sfx.tap(); if (target && !busy) say('explain', promptFor(target)); return; }
     const opt = t.closest('.mopt');
     if (opt && !busy) choose(opt);
   });

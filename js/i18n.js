@@ -19,7 +19,11 @@ export const UI = {
     noVoice: 'На этом устройстве нет казахского голоса. Тобот показывает текст.',
     langBtn: 'ҚАЗ',
     colorsTitle: 'Учим цвета',
-    promptColor: 'Покажи {c}!',
+    promptColor: 'Найди {o}!',
+    objects: {
+      red: 'красное яблоко', blue: 'синего кита', yellow: 'жёлтый банан', green: 'зелёную лягушку',
+      orange: 'оранжевый апельсин', purple: 'фиолетовый виноград', pink: 'розовую свинку', brown: 'коричневого мишку',
+    },
     colorNames: {
       red: 'красный', blue: 'синий', yellow: 'жёлтый', green: 'зелёный',
       orange: 'оранжевый', purple: 'фиолетовый', pink: 'розовый', brown: 'коричневый',
@@ -54,7 +58,11 @@ export const UI = {
     noVoice: 'Бұл құрылғыда қазақ дауысы жоқ. Тобот мәтінді көрсетеді.',
     langBtn: 'РУС',
     colorsTitle: 'Түстерді үйренеміз',
-    promptColor: '{c} түсті тап!',
+    promptColor: '{o} тап!',
+    objects: {
+      red: 'қызыл алманы', blue: 'көк китті', yellow: 'сары бананды', green: 'жасыл бақаны',
+      orange: 'қызғылт сары апельсинді', purple: 'күлгін жүзімді', pink: 'қызғылт шошқаны', brown: 'қоңыр аюды',
+    },
     colorNames: {
       red: 'қызыл', blue: 'көк', yellow: 'сары', green: 'жасыл',
       orange: 'қызғылт сары', purple: 'күлгін', pink: 'қызғылт', brown: 'қоңыр',
