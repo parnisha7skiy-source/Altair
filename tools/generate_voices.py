@@ -151,22 +151,24 @@ def synthesize_edge(voice, text, ptype, tries=3):
     for i, sent in enumerate(parts):
         rate, pitch = sentence_prosody(ptype, sent, i, len(parts))
         hz = int(round(pitch * 1.5))
-        # сервис иногда отвергает нестандартные значения («No audio was received»): пробуем всё проще и проще
-        attempts = [(rate, hz), (rate, min(hz, 30)), (min(rate, 2), min(hz, 30)), (min(rate, 2), 15), (0, 0)]
+        # сервис иногда не отдаёт звук (притормаживает частые запросы или не любит значения): повторяем с нарастающей паузой,
+        # потом пробуем мягче, в конце без интонации
+        attempts = [(rate, hz), (rate, hz), (rate, min(hz, 30)), (min(rate, 2), min(hz, 30)), (min(rate, 2), 15), (0, 0)]
+        pauses = [1.5, 3, 6, 10, 15, 0]
         last = None
         for n, (r, h) in enumerate(attempts):
             try:
                 audio += asyncio.run(one(sent, r, h))
-                if n:
+                if n > 1:
                     print(f"  (запасной вариант {n}: rate={r:+d}% pitch={h:+d}Hz) «{sent[:30]}»")
                 last = None
                 break
             except Exception as e:
                 last = e
-                time.sleep(0.7)
+                time.sleep(pauses[n])
         if last:
             raise RuntimeError(f"edge-tts не смог озвучить «{sent[:40]}»: {last}")
-        time.sleep(0.1)
+        time.sleep(0.5)
     return audio
 
 
@@ -208,6 +210,7 @@ def main():
         print(f"Предупреждение: задания игр не добавлены (нужен node): {e}")
 
     done = skipped = 0
+    failed = []
     for rid, file_rel, text, ptype, lang in jobs:
         if args.only and lang != args.only:
             continue
@@ -220,10 +223,15 @@ def main():
         if not args.force and file_abs.exists() and manifest.get(rid, {}).get("hash") == sig:
             skipped += 1
             continue
-        if engine == "azure":
-            audio = synthesize(region, key, build_ssml(lang, voice, text, ptype, args.styles))
-        else:
-            audio = synthesize_edge(voice, text, ptype)
+        try:
+            if engine == "azure":
+                audio = synthesize(region, key, build_ssml(lang, voice, text, ptype, args.styles))
+            else:
+                audio = synthesize_edge(voice, text, ptype)
+        except RuntimeError as e:
+            failed.append(rid)
+            print(f"[{rid}] ПРОПУЩЕНО: {e}")
+            continue
         file_abs.parent.mkdir(parents=True, exist_ok=True)
         file_abs.write_bytes(audio)
         manifest[rid] = {"file": file_rel, "hash": sig, "text": text, "voice": voice}
@@ -232,7 +240,9 @@ def main():
 
     AUDIO.mkdir(exist_ok=True)
     MANIFEST.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"Готово: создано/обновлено {done}, пропущено без изменений {skipped}. Манифест: {MANIFEST.relative_to(ROOT)}")
+    print(f"Готово: создано/обновлено {done}, без изменений {skipped}, не удалось {len(failed)}. Манифест: {MANIFEST.relative_to(ROOT)}")
+    if failed:
+        sys.exit(2)   # код 2: часть реплик не озвучена; следующий проход (или запуск) доделает только их
 
 
 if __name__ == "__main__":

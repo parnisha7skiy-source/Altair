@@ -51,7 +51,13 @@ jobs:
           ARGS=""
           if [ "$FORCE" = "true" ]; then ARGS="$ARGS --force"; fi
           if [ "$STYLES" = "true" ]; then ARGS="$ARGS --styles"; fi
-          python3 tools/generate_voices.py $ARGS
+          # несколько проходов: уже озвученное пропускается, добираются только неудавшиеся реплики
+          for i in 1 2 3 4; do
+            python3 tools/generate_voices.py $ARGS && break
+            ARGS="${ARGS//--force/}"
+            echo "Проход $i не закончен, повторяем через 30 секунд"; sleep 30
+          done
+          python3 tools/generate_voices.py ${ARGS//--force/} || true
 
       - name: Сохранить озвучку в репозиторий
         run: |
