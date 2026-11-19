@@ -1,7 +1,7 @@
 // Игры «выбери правильную плитку»: счёт, фигуры, кто как говорит, найди лишнего.
 // Каждая игра — функция-генератор раунда: (level, last, gt) -> { prompt, scene?, options:[{key,html,bg}], answer }.
 // Сложность (level) растёт с каждой пройденной игрой. Ошибка не наказывается.
-import { sfx, confetti } from './fx.js';
+import { sfx, confetti, once } from './fx.js';
 
 const rnd = (n) => Math.floor(Math.random() * n);
 const pick = (a) => a[rnd(a.length)];
@@ -131,14 +131,15 @@ export function runChoice({ host, lang, gt, id, level, say, onCorrect, onFinish,
       stars++; renderStars();
       sfx.ok(); confetti(22);
       onCorrect();
-      say('joy', null);
-      later(() => { round++; if (round >= ROUNDS) finish(); else ask(); }, 2300);
+      // следующий раунд — только когда Тобот договорил похвалу (страховка 9 секунд)
+      const go = once(() => { round++; if (round >= ROUNDS) finish(); else ask(); });
+      say('joy', null, () => later(go, 600));
+      later(go, 9000);
     } else {
       sfx.miss();
       btn.classList.remove('miss'); void btn.offsetWidth; btn.classList.add('miss');
       misses++;
-      say('encourage', null);
-      if (misses >= 2) later(hint, 1800);
+      say('encourage', null, () => { if (misses >= 2 && !busy) later(hint, 400); });
       armIdle();
     }
   }

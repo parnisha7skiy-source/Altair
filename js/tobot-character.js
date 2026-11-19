@@ -136,9 +136,10 @@ export class TobotCharacter {
     const audio = typeof line === 'object' && line.audio;
     this.stopSpeaking();
     this.speaking = true;
+    const sayId = (this._sayId = (this._sayId || 0) + 1);
     this.play(this._gesture(type, style.clip), { fade: 0.25 });
     const finish = () => {
-      if (!this.speaking) return;
+      if (sayId !== this._sayId || !this.speaking) return;   // старая (прерванная) реплика не трогает новую
       this.speaking = false; this._mouthTarget = 0; this._analyser = null;
       if (this.currentName === 'Talking') this.play('Idle', { fade: 0.4 });
       if (onend) onend();
@@ -177,6 +178,7 @@ export class TobotCharacter {
     el.crossOrigin = 'anonymous';
     try {
       this._ctx = this._ctx || new (window.AudioContext || window.webkitAudioContext)();
+      if (this._ctx.state === 'suspended') this._ctx.resume();
       const src = this._ctx.createMediaElementSource(el);
       const an = this._ctx.createAnalyser(); an.fftSize = 512;
       src.connect(an); an.connect(this._ctx.destination);

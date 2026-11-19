@@ -46,3 +46,6 @@ export function confetti(n = 36) {
     ], { duration: 1500 + Math.random() * 600, easing: 'ease-out' }).onfinish = () => el.remove();
   }
 }
+
+// вызвать функцию не более одного раза (для «после реплики идём дальше» + страховка по таймеру)
+export function once(fn) { let d = false; return (...a) => { if (d) return; d = true; return fn(...a); }; }

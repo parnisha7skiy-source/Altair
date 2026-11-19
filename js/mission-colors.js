@@ -1,7 +1,7 @@
 // Миссия «Учить цвета»: Тобот просит найти предмет нужного цвета («Найди красное яблоко!»).
 // Пул цветов растёт от миссии к миссии: 2 → 3 → 4 → … → все 8. Вариантов на экране от 2 до 6.
 // Ошибка не наказывается: мягкий звук, подбадривание, после двух промахов или паузы — подсказка.
-import { sfx, confetti } from './fx.js';
+import { sfx, confetti, once } from './fx.js';
 
 export const COLOR_ORDER = ['red', 'blue', 'yellow', 'green', 'orange', 'purple', 'pink', 'brown'];
 export const COLOR_HEX = {
@@ -102,14 +102,15 @@ export function runColorsMission({ host, strings: s, lang, missions, say, onCorr
       stars++; renderStars();
       sfx.ok(); confetti(24);
       onCorrect(c);
-      say('joy', null);
-      later(() => { round++; if (round >= ROUNDS) finish(); else ask(); }, 2300);
+      // следующий раунд — только когда Тобот договорил похвалу (страховка 9 секунд)
+      const go = once(() => { round++; if (round >= ROUNDS) finish(); else ask(); });
+      say('joy', null, () => later(go, 600));
+      later(go, 9000);
     } else {
       sfx.miss();
       btn.classList.remove('miss'); void btn.offsetWidth; btn.classList.add('miss');
       misses++;
-      say('encourage', null);
-      if (misses >= HINT_AFTER_MISSES) later(hint, 1800);
+      say('encourage', null, () => { if (misses >= HINT_AFTER_MISSES && !busy) later(hint, 400); });
       armIdle();
     }
   }

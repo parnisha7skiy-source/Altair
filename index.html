@@ -290,7 +290,7 @@ function hideHint() { if (hintShown) { hintShown = false; $('hint').style.opacit
 
 let phrasesReady = false;
 let noVoiceShown = false;
-function speakLine(line) {
+function speakLine(line, onDone) {
   if (!line) return;
   hideHint();
   showBubble(line.text);
@@ -298,10 +298,10 @@ function speakLine(line) {
     noVoiceShown = true;
     toast(t('noVoice'), 4000);
   }
-  tobot.say(line.type, line, { onend: hideBubbleLater });
+  tobot.say(line.type, line, { onend: () => { hideBubbleLater(); if (onDone) onDone(); } });
 }
 function greet() { if (phrasesReady) speakLine(pickLine(lang, 'greeting')); }
-function chat() { if (phrasesReady) speakLine(pickMixed(lang)); }
+function chat() { if (phrasesReady && !tobot.speaking) speakLine(pickMixed(lang)); }   // тап не перебивает речь
 
 // тап по Тоботу: новая реплика; речь на iPhone разрешена только после жеста пользователя
 const raycaster = new THREE.Raycaster();
@@ -326,7 +326,7 @@ function startGame(id, { adventure = false } = {}) {
     host: document.body,
     lang,
     level,
-    say: (type, text) => speakLine(text ? { type, lang, text, audio: audioForText(lang, text) } : pickLine(lang, type)),
+    say: (type, text, onDone) => type === 'encourage' && tobot.speaking ? null : speakLine(text ? { type, lang, text, audio: audioForText(lang, text) } : pickLine(lang, type), onDone),
     onCorrect: (c) => {
       progress.stars++;
       if (typeof c === 'string' && /^[a-z]+$/.test(c) && !progress.colors.includes(c) && id !== 'shapes' && id !== 'animals') progress.colors.push(c);
