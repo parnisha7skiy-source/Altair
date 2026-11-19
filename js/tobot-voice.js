@@ -10,7 +10,7 @@ export const VOICE_STYLES = {
   talk:      { label: 'Разговор',      icon: '💬', rate: 0.92, pitch: 1.32, clip: 'Talking' },
   joy:       { label: 'Радость',       icon: '😄', rate: 1.00, pitch: 1.55, clip: 'Happy' },
   encourage: { label: 'Подбадривание', icon: '🤗', rate: 0.86, pitch: 1.30, clip: 'Talking' },
-  surprise:  { label: 'Удивление',     icon: '😮', rate: 0.88, pitch: 1.60, clip: 'Sad' },
+  surprise:  { label: 'Удивление',     icon: '😮', rate: 0.88, pitch: 1.60, clip: 'Talking' },
   explain:   { label: 'Объяснение',    icon: '👉', rate: 0.84, pitch: 1.28, clip: 'Pointing' },
   victory:   { label: 'Победа',        icon: '🏆', rate: 0.96, pitch: 1.58, clip: 'Victory' },
 };

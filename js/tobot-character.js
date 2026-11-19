@@ -18,7 +18,22 @@ const LOOPING = new Set(['Idle', 'Talking', 'Listening', 'Thinking']);
 const MOUTH_BASE = {
   Idle: [1.0, 0.55], Greeting: [1.35, 0.8], Talking: [1.0, 0.55], Listening: [0.7, 0.6], Happy: [1.6, 0.8], Surprise: [0.8, 1.2],
   Thinking: [0.55, 0.4], Sad: [0.6, 0.3], Victory: [1.7, 1.1], Pointing: [1.0, 0.6],
+  Dance: [1.6, 0.9], Jump: [1.5, 1.0], Clap: [1.5, 0.8], Nod: [1.1, 0.6], HeadShake: [0.8, 0.5],
+  Bow: [1.3, 0.7], Surprised: [0.8, 1.3], Cheer: [1.7, 1.1], Shrug: [0.9, 0.5],
 };
+
+// жесты по типу реплики: каждый раз выбирается другой (из тех, что есть в модели)
+const GESTURES = {
+  greeting: ['Greeting', 'Greeting', 'Bow', 'Cheer'],
+  talk: ['Talking', 'Talking', 'Nod', 'Shrug'],
+  joy: ['Happy', 'Jump', 'Dance', 'Clap', 'Cheer'],
+  encourage: ['Nod', 'Shrug', 'Talking'],
+  surprise: ['Surprised'],
+  explain: ['Pointing', 'Nod', 'Pointing'],
+  victory: ['Victory', 'Dance', 'Jump', 'Cheer', 'Clap'],
+};
+// короткие жесты «от скуки», когда Тобот молчит
+const FIDGETS = ['Greeting', 'Nod', 'Shrug', 'Clap', 'Bow', 'Cheer'];
 
 export class TobotCharacter {
   constructor({ url, data, scale = 1 } = {}) {
@@ -39,6 +54,8 @@ export class TobotCharacter {
     this._speakStart = 0;
     this._returnTimer = null;
     this.onClipFinished = null;
+    this._lastGesture = {};
+    this._fidgetIn = 9;
     this.voice = new TobotVoice();
   }
 
@@ -119,7 +136,7 @@ export class TobotCharacter {
     const audio = typeof line === 'object' && line.audio;
     this.stopSpeaking();
     this.speaking = true;
-    this.play(style.clip, { fade: 0.25 });
+    this.play(this._gesture(type, style.clip), { fade: 0.25 });
     const finish = () => {
       if (!this.speaking) return;
       this.speaking = false; this._mouthTarget = 0; this._analyser = null;
@@ -132,6 +149,23 @@ export class TobotCharacter {
     }
     const ok = this.voice.speak(text, type, { lang: line.lang || 'ru', onboundary: () => (this._mouthPulse = 1), onend: finish });
     return { audio: ok, ...this.voice.status() };
+  }
+
+  /** Выбор жеста для типа реплики: не повторяет предыдущий и учитывает, какие клипы есть в модели. */
+  _gesture(type, fallback) {
+    const list = (GESTURES[type] || []).filter((n) => this.actions[n]);
+    if (!list.length) return fallback;
+    let pick = list[Math.floor(Math.random() * list.length)];
+    if (list.length > 1 && pick === this._lastGesture[type]) pick = list[(list.indexOf(pick) + 1) % list.length];
+    this._lastGesture[type] = pick;
+    return pick;
+  }
+
+  /** Проиграть жест по имени (если он есть в модели). */
+  gesture(name) {
+    if (!this.actions[name]) return false;
+    this.play(name, { fade: 0.25 });
+    return true;
   }
 
   /** Совместимость: обычная речь. */
@@ -167,6 +201,14 @@ export class TobotCharacter {
   update(dt) {
     if (!this.mixer) return;
     this.mixer.update(dt);
+    if (!this.speaking && this.currentName === 'Idle') {
+      this._fidgetIn -= dt;
+      if (this._fidgetIn <= 0) {
+        this._fidgetIn = 9 + Math.random() * 7;
+        const list = FIDGETS.filter((n) => this.actions[n]);
+        if (list.length) this.play(list[Math.floor(Math.random() * list.length)], { fade: 0.3 });
+      }
+    }
 
     // --- рот
     const now = performance.now() / 1000;

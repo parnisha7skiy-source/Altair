@@ -87,3 +87,8 @@ Settings → Pages → Source: `Deploy from a branch`, branch `main`, folder `/ 
 
 Если секретов Azure нет, workflow «Озвучка Тобота» сам использует бесплатную библиотеку `edge-tts` (голоса Dmitry для русского и Daulet для казахского).
 Запуск: вкладка Actions → «Озвучка Тобота» → Run workflow. Озвучиваются реплики Тобота и задания игр. Это неофициальный доступ к сервису Microsoft: для семейного приложения подходит, но может перестать работать; тогда подключите Azure (секреты `AZURE_SPEECH_KEY`, `AZURE_SPEECH_REGION`).
+
+## Жесты Тобота
+
+18 анимаций: основные Idle, Greeting, Talking, Listening, Happy, Thinking, Sad, Victory, Pointing и жесты Dance, Jump, Clap, Nod, HeadShake, Bow, Surprised, Cheer, Shrug (необязательные: если их нет в модели, Тобот использует основные). На каждую реплику выбирается жест по её типу (`GESTURES` в `js/tobot-character.js`), в тишине Тобот иногда шевелится сам. Модель пересобирается командой `python3 tools/build_tobot_glb.py models/tobot.glb`.
+Кадр подбирается автоматически (`fitCamera` в `index.html`): Тобот целиком виден между заголовком и нижней панелью.

@@ -3,10 +3,11 @@
 Генератор временной 3D-модели Тобота (placeholder-rig) -> tobot.glb
 
 Blender не нужен: скрипт строит геометрию из примитивов (эллипсоиды, цилиндры),
-собирает иерархию "костей" (узлов glTF), 9 анимационных клипов и пишет GLB.
+собирает иерархию "костей" (узлов glTF), 18 анимационных клипов (9 основных и 9 жестов) и пишет GLB.
 
 КОНТРАКТ для замены на финальную модель (см. README):
   - клипы с именами: Idle, Greeting, Talking, Listening, Happy, Thinking, Sad, Victory, Pointing
+    + жесты: Dance, Jump, Clap, Nod, HeadShake, Bow, Surprised, Cheer, Shrug (необязательные)
   - необязательные узлы: Mouth, EyeL, EyeR, BrowL, BrowR, Antenna, Head  (рантайм подстраивается)
 Запуск: python3 build_tobot_glb.py [out.glb]
 """
@@ -318,10 +319,113 @@ def pointing(t, T):
         arm("L", 0.05, 0.02, 0.1),
         arm("R", 1.45 * e, 0.45 * e, 0.12 * e))  # рука вытянута вперёд-вбок
 
+
+# ---- дополнительные жесты (одноразовые клипы)
+def seg(u, a, b):
+    """Полуволна 0..1..0 на отрезке [a, b] доли клипа, вне него 0."""
+    return S(PI * (u - a) / (b - a)) if a <= u <= b else 0.0
+
+def happy_eyes(e, k=0.4):
+    return {"EyeL": ("s", (1 + 0.1 * e, 1 - k * e, 1)), "EyeR": ("s", (1 + 0.1 * e, 1 - k * e, 1))}
+
+def rest_arms():
+    return merge(arm("L", 0.05, 0.02, 0.05), arm("R", 0.05, 0.02, 0.05))
+
+def dance(t, T):
+    e = env(t, T, 0.12, 0.15); w = 2 * PI * 4 * t / T; s = S(w / 2)
+    return merge(
+        {"Root": ("t", (0, 0.05 * abs(S(w)) * e, 0)), "Hips": ("r", (0, 0.25 * s * e, 0.08 * S(w) * e)),
+         "Torso": ("r", (0.04 * e, -0.22 * s * e, 0.07 * S(w + 1) * e)),
+         "Head": ("r", (0.05 * S(w) * e, 0.2 * S(w / 2 + 1) * e, 0.12 * S(w) * e)),
+         "Antenna": ("r", (0, 0, 0.45 * S(w * 2) * e)),
+         "HipL": ("r", (-0.35 * max(0, s) * e, 0, 0)), "HipR": ("r", (-0.35 * max(0, -s) * e, 0, 0)),
+         "KneeL": ("r", (0.6 * max(0, s) * e, 0, 0)), "KneeR": ("r", (0.6 * max(0, -s) * e, 0, 0))},
+        happy_eyes(e),
+        arm("L", 0.2 * e, (1.4 + 0.8 * s) * e, (0.4 + 0.3 * S(w)) * e),
+        arm("R", 0.2 * e, (1.4 - 0.8 * s) * e, (0.4 + 0.3 * S(w + PI)) * e))
+
+def jump(t, T):
+    u = t / T
+    squat = max(seg(u, 0.0, 0.3), 0.5 * seg(u, 0.75, 1.0)); air = seg(u, 0.3, 0.75)
+    return merge(
+        {"Root": ("t", (0, 0.30 * air + 0.035 * squat, 0)), "Hips": ("t", (0, -0.05 * squat, 0)),
+         "Torso": ("r", (0.15 * squat - 0.08 * air, 0, 0)), "Head": ("r", (-0.1 * air, 0, 0)),
+         "Antenna": ("r", (0.5 * air - 0.3 * squat, 0, 0)),
+         "HipL": ("r", (-0.5 * squat - 0.3 * air, 0, 0)), "HipR": ("r", (-0.5 * squat - 0.3 * air, 0, 0)),
+         "KneeL": ("r", (0.9 * squat + 0.7 * air, 0, 0)), "KneeR": ("r", (0.9 * squat + 0.7 * air, 0, 0))},
+        happy_eyes(air),
+        arm("L", -0.4 * squat, 2.6 * air + 0.1 * squat, 0.2 * air),
+        arm("R", -0.4 * squat, 2.6 * air + 0.1 * squat, 0.2 * air))
+
+def clap(t, T):
+    e = env(t, T, 0.15, 0.15); w = 2 * PI * 5 * t / T; c = 0.5 + 0.5 * S(w)
+    return merge(
+        {"Torso": ("r", (0.03 * e, 0, 0.03 * S(w) * e)), "Head": ("r", (-0.05 * e, 0.06 * S(w / 2) * e, 0)),
+         "Antenna": ("r", (0, 0, 0.3 * S(w) * e)), "Root": ("t", (0, 0.015 * c * e, 0))},
+        happy_eyes(e, 0.3),
+        # руки вытянуты вперёд; поворот плеч вокруг вертикали сводит ладони (проверено расчётом поз)
+        arm("L", 1.65 * e, 0, 0.1 * e, twist=-(0.35 + 0.45 * c) * e),
+        arm("R", 1.65 * e, 0, 0.1 * e, twist=-(0.35 + 0.45 * c) * e))
+
+def nod(t, T):
+    e = env(t, T, 0.15, 0.2); w = 2 * PI * 2 * t / T
+    return merge(
+        {"Head": ("r", (0.22 * S(w) * e, 0, 0)), "Torso": ("r", (0.04 * S(w) * e, 0, 0)),
+         "Antenna": ("r", (0.12 * S(w + 1) * e, 0, 0.1 * S(w) * e)),
+         "BrowL": ("t", (0, 0.012 * e, 0)), "BrowR": ("t", (0, 0.012 * e, 0))},
+        rest_arms())
+
+def headshake(t, T):
+    e = env(t, T, 0.15, 0.2); w = 2 * PI * 2.5 * t / T
+    return merge(
+        {"Head": ("r", (0.03 * e, 0.35 * S(w) * e, 0)), "Torso": ("r", (0, 0.06 * S(w) * e, 0)),
+         "Antenna": ("r", (0, 0, 0.25 * S(w) * e))},
+        rest_arms())
+
+def bow(t, T):
+    e = env(t, T, 0.3, 0.3)
+    return merge(
+        {"Torso": ("r", (0.65 * e, 0, 0)), "Head": ("r", (0.15 * e, 0, 0)), "Antenna": ("r", (0.3 * e, 0, 0)),
+         "Hips": ("t", (0, -0.01 * e, -0.02 * e))},
+        happy_eyes(e, 0.3),
+        arm("R", 0.9 * e, 0.05 * e, 1.6 * e), arm("L", -0.3 * e, 0.2 * e, 0.2 * e))
+
+def surprised(t, T):
+    u = t / T; e = env(t, T, 0.08, 0.3); w = 2 * PI * 6 * t / T
+    return merge(
+        {"Root": ("t", (0, 0.12 * seg(u, 0.02, 0.3), 0)),
+         "Torso": ("r", (-0.18 * e, 0, 0)), "Head": ("r", (-0.2 * e, 0, 0.05 * S(w) * e)),
+         "Antenna": ("r", (-0.5 * e, 0, 0.3 * S(w) * e)),
+         "BrowL": ("t", (0, 0.04 * e, 0)), "BrowR": ("t", (0, 0.04 * e, 0)),
+         "EyeL": ("s", (1 + 0.3 * e, 1 + 0.3 * e, 1)), "EyeR": ("s", (1 + 0.3 * e, 1 + 0.3 * e, 1))},
+        arm("L", 0.3 * e, 1.1 * e, 0.6 * e), arm("R", 0.3 * e, 1.1 * e, 0.6 * e))
+
+def cheer(t, T):
+    e = env(t, T, 0.1, 0.2); w = 2 * PI * 3 * t / T
+    return merge(
+        {"Root": ("t", (0, 0.04 * abs(S(w)) * e, 0)), "Torso": ("r", (-0.08 * e, 0, 0.06 * S(w) * e)),
+         "Head": ("r", (-0.15 * e, 0.08 * S(w) * e, 0)), "Antenna": ("r", (0, 0, 0.4 * S(w * 2) * e)),
+         "HipL": ("r", (-0.15 * abs(S(w)) * e, 0, 0)), "HipR": ("r", (-0.15 * abs(S(w)) * e, 0, 0)),
+         "KneeL": ("r", (0.3 * abs(S(w)) * e, 0, 0)), "KneeR": ("r", (0.3 * abs(S(w)) * e, 0, 0))},
+        happy_eyes(e),
+        arm("L", 0.1 * e, (2.5 + 0.3 * S(w)) * e, (0.3 + 0.4 * max(0, S(w))) * e),
+        arm("R", 0.1 * e, (2.5 + 0.3 * S(w + PI)) * e, (0.3 + 0.4 * max(0, S(w + PI))) * e))
+
+def shrug(t, T):
+    e = env(t, T, 0.25, 0.25); w = 2 * PI * 2 * t / T
+    return merge(
+        {"Head": ("r", (0, 0.08 * S(w) * e, 0.2 * e)), "Torso": ("r", (0, 0, -0.04 * e)),
+         "Antenna": ("r", (0, 0, 0.2 * e)),
+         "BrowL": ("t", (0, 0.03 * e, 0)), "BrowR": ("t", (0, 0.03 * e, 0))},
+        arm("L", 0.3 * e, 0.55 * e, 1.1 * e), arm("R", 0.3 * e, 0.55 * e, 1.1 * e))
+
 CLIPS = [  # имя, длительность, функция, зациклен ли
     ("Idle", 4.0, idle, True), ("Greeting", 2.4, greeting, False), ("Talking", 2.0, talking, True),
     ("Listening", 3.0, listening, True), ("Happy", 2.0, happy, False), ("Thinking", 3.0, thinking, True),
     ("Sad", 2.2, sad, False), ("Victory", 3.0, victory, False), ("Pointing", 2.4, pointing, False),
+    ("Dance", 4.0, dance, False), ("Jump", 1.6, jump, False), ("Clap", 2.4, clap, False), ("Nod", 2.0, nod, False),
+    ("HeadShake", 2.0, headshake, False), ("Bow", 2.6, bow, False), ("Surprised", 2.0, surprised, False),
+    ("Cheer", 2.4, cheer, False), ("Shrug", 2.4, shrug, False),
 ]
 
 # Корректирующая «спина» для вращения Root в Victory (оборот вокруг Y) — через отдельный канал
