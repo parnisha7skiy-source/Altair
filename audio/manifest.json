@@ -13,8 +13,8 @@
   },
   "ru/greeting-2": {
     "file": "audio/ru/greeting-2.mp3",
-    "hash": "fda6a1ffbedc",
-    "text": "Доброе утро, друг! Готов к новой миссии?",
+    "hash": "8978d6e03707",
+    "text": "Привет, Альтаир! Готов к новой миссии?",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/greeting-3": {
@@ -25,8 +25,8 @@
   },
   "ru/greeting-4": {
     "file": "audio/ru/greeting-4.mp3",
-    "hash": "698358778370",
-    "text": "Привет-привет! Ты как раз вовремя!",
+    "hash": "e34483ab0d80",
+    "text": "Привет-привет, Альтаир! Ты как раз вовремя!",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/greeting-5": {
@@ -37,14 +37,14 @@
   },
   "ru/greeting-6": {
     "file": "audio/ru/greeting-6.mp3",
-    "hash": "9cba9a4e85ba",
-    "text": "Здорово, напарник! Давай знакомиться заново?",
+    "hash": "c29c00ab08a5",
+    "text": "Здорово, Альтаир! Давай знакомиться заново?",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/greeting-7": {
     "file": "audio/ru/greeting-7.mp3",
-    "hash": "2d792ed42a87",
-    "text": "Приветик! Я уже соскучился по нашим играм.",
+    "hash": "453ed2659c57",
+    "text": "Приветик, Альтаир! Я уже соскучился по нашим играм.",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/greeting-8": {
@@ -55,14 +55,14 @@
   },
   "ru/greeting-9": {
     "file": "audio/ru/greeting-9.mp3",
-    "hash": "27e2ec635d6c",
-    "text": "О, мой любимый друг пришёл! Здравствуй!",
+    "hash": "06100a1df3c7",
+    "text": "О, мой любимый друг Альтаир пришёл! Здравствуй!",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/greeting-10": {
     "file": "audio/ru/greeting-10.mp3",
-    "hash": "c077f11ec084",
-    "text": "Привет! Я Тобот, и я очень рад, что ты здесь.",
+    "hash": "030cafc431d6",
+    "text": "Привет, Альтаир! Я Тобот, и я очень рад, что ты здесь.",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/greeting-11": {
@@ -79,8 +79,8 @@
   },
   "ru/talk-1": {
     "file": "audio/ru/talk-1.mp3",
-    "hash": "abc628acae3a",
-    "text": "Давай поиграем вместе. Я буду рядом.",
+    "hash": "380b12dcd96d",
+    "text": "Давай поиграем вместе, Альтаир. Я буду рядом.",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/talk-2": {
@@ -91,8 +91,8 @@
   },
   "ru/talk-3": {
     "file": "audio/ru/talk-3.mp3",
-    "hash": "344cd1cf0fd6",
-    "text": "Я люблю разные цвета. А ты какой любишь?",
+    "hash": "378a8d057b52",
+    "text": "Я люблю разные цвета, Альтаир. А ты какой любишь?",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/talk-4": {
@@ -103,8 +103,8 @@
   },
   "ru/talk-5": {
     "file": "audio/ru/talk-5.mp3",
-    "hash": "e74be77892fa",
-    "text": "Вокруг нас столько всего цветного! Замечаешь?",
+    "hash": "2e870ea44993",
+    "text": "Вокруг нас столько всего цветного, Альтаир! Замечаешь?",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/talk-6": {
@@ -115,8 +115,8 @@
   },
   "ru/talk-7": {
     "file": "audio/ru/talk-7.mp3",
-    "hash": "3ff0760ed8cc",
-    "text": "Иногда я немножко забываю слова. Помогаешь мне?",
+    "hash": "d640e08db19d",
+    "text": "Иногда я немножко забываю слова, Альтаир. Помогаешь мне?",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/talk-8": {
@@ -127,8 +127,8 @@
   },
   "ru/talk-9": {
     "file": "audio/ru/talk-9.mp3",
-    "hash": "04328824d24a",
-    "text": "Хочешь, я расскажу, как я появился на свет?",
+    "hash": "877399585aa6",
+    "text": "Хочешь, я расскажу, как я появился на свет, Альтаир?",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/talk-10": {
@@ -139,8 +139,8 @@
   },
   "ru/talk-11": {
     "file": "audio/ru/talk-11.mp3",
-    "hash": "2b9a28661e8c",
-    "text": "Мы с тобой отличная команда, правда?",
+    "hash": "b82f027c8855",
+    "text": "Мы с тобой отличная команда, правда, Альтаир?",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/talk-12": {
@@ -151,14 +151,14 @@
   },
   "ru/talk-13": {
     "file": "audio/ru/talk-13.mp3",
-    "hash": "057b36958d50",
-    "text": "Ух, какой хороший день для приключений!",
+    "hash": "fde3cd6e5e69",
+    "text": "Ух, какой хороший день для приключений, Альтаир!",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/joy-0": {
     "file": "audio/ru/joy-0.mp3",
-    "hash": "2bb73575d159",
-    "text": "Ура! Ты правильно сказал! Молодец!",
+    "hash": "8874766285b2",
+    "text": "Ура, Альтаир! Ты правильно сказал! Молодец!",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/joy-1": {
@@ -181,8 +181,8 @@
   },
   "ru/joy-4": {
     "file": "audio/ru/joy-4.mp3",
-    "hash": "b73ec2720d0e",
-    "text": "Класс! Я так радуюсь! Хлоп-хлоп!",
+    "hash": "7339ff1bd33d",
+    "text": "Класс, Альтаир! Я так радуюсь! Хлоп-хлоп!",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/joy-5": {
@@ -193,8 +193,8 @@
   },
   "ru/joy-6": {
     "file": "audio/ru/joy-6.mp3",
-    "hash": "c9e45cd9e848",
-    "text": "Ура-ура! Получилось, получилось!",
+    "hash": "16a093b21b3b",
+    "text": "Ура-ура, Альтаир! Получилось, получилось!",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/joy-7": {
@@ -205,8 +205,8 @@
   },
   "ru/joy-8": {
     "file": "audio/ru/joy-8.mp3",
-    "hash": "d870082c019a",
-    "text": "Здорово! Теперь я точно знаю, что ты умеешь!",
+    "hash": "5518459bea0a",
+    "text": "Здорово, Альтаир! Теперь я точно знаю, что ты умеешь!",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/joy-9": {
@@ -217,8 +217,8 @@
   },
   "ru/joy-10": {
     "file": "audio/ru/joy-10.mp3",
-    "hash": "74545b45eb4a",
-    "text": "Бинго! Именно так!",
+    "hash": "42632f1f6502",
+    "text": "Бинго, Альтаир! Именно так!",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/joy-11": {
@@ -229,8 +229,8 @@
   },
   "ru/encourage-0": {
     "file": "audio/ru/encourage-0.mp3",
-    "hash": "8a8bae4b1573",
-    "text": "Не переживай, попробуем ещё раз. У тебя получится!",
+    "hash": "a9ed1e57eb19",
+    "text": "Не переживай, попробуем ещё раз, Альтаир. У тебя получится!",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/encourage-1": {
@@ -247,8 +247,8 @@
   },
   "ru/encourage-3": {
     "file": "audio/ru/encourage-3.mp3",
-    "hash": "17d62504ef89",
-    "text": "Ошибаются все, даже роботы! Давай попробуем снова.",
+    "hash": "62763812eb36",
+    "text": "Ошибаются все, даже роботы, Альтаир! Давай попробуем снова.",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/encourage-4": {
@@ -259,8 +259,8 @@
   },
   "ru/encourage-5": {
     "file": "audio/ru/encourage-5.mp3",
-    "hash": "924687c0827c",
-    "text": "Не спеши. Подумай и скажи спокойно.",
+    "hash": "4dc59ca8613e",
+    "text": "Не спеши, Альтаир. Подумай и скажи спокойно.",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/encourage-6": {
@@ -271,8 +271,8 @@
   },
   "ru/encourage-7": {
     "file": "audio/ru/encourage-7.mp3",
-    "hash": "804e51b64672",
-    "text": "Ничего, в следующий раз точно получится!",
+    "hash": "3d457011d36f",
+    "text": "Ничего, в следующий раз точно получится, Альтаир!",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/encourage-8": {
@@ -283,8 +283,8 @@
   },
   "ru/encourage-9": {
     "file": "audio/ru/encourage-9.mp3",
-    "hash": "45bc9caa2078",
-    "text": "Давай вместе, я буду говорить первым, а ты за мной.",
+    "hash": "087483b3fa35",
+    "text": "Давай вместе, я буду говорить первым, а ты за мной, Альтаир.",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/encourage-10": {
@@ -295,14 +295,14 @@
   },
   "ru/encourage-11": {
     "file": "audio/ru/encourage-11.mp3",
-    "hash": "5d5439e8e902",
-    "text": "Попробуй ещё раз, а я подскажу, если нужно.",
+    "hash": "08ba559c0713",
+    "text": "Попробуй ещё раз, а я подскажу, если нужно, Альтаир.",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/surprise-0": {
     "file": "audio/ru/surprise-0.mp3",
-    "hash": "105d86ea1ee0",
-    "text": "Ой! Кажется, это другой цвет. Давай посмотрим ещё раз?",
+    "hash": "2cf44967cbef",
+    "text": "Ой, Альтаир! Кажется, это другой цвет. Давай посмотрим ещё раз?",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/surprise-1": {
@@ -313,8 +313,8 @@
   },
   "ru/surprise-2": {
     "file": "audio/ru/surprise-2.mp3",
-    "hash": "8841197b9369",
-    "text": "Ой-ой! Я тоже иногда путаю. Посмотри внимательно!",
+    "hash": "bd770bd9ea15",
+    "text": "Ой-ой, Альтаир! Я тоже иногда путаю. Посмотри внимательно!",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/surprise-3": {
@@ -325,8 +325,8 @@
   },
   "ru/surprise-4": {
     "file": "audio/ru/surprise-4.mp3",
-    "hash": "e9177015b5d0",
-    "text": "Ой, а это что такое? Давай разберёмся вместе!",
+    "hash": "3a42f2758323",
+    "text": "Ой, а это что такое, Альтаир? Давай разберёмся вместе!",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/surprise-5": {
@@ -337,8 +337,8 @@
   },
   "ru/surprise-6": {
     "file": "audio/ru/surprise-6.mp3",
-    "hash": "14ef170c14c0",
-    "text": "Ух ты! Смотри, как интересно получилось!",
+    "hash": "cb28e2d0daeb",
+    "text": "Ух ты, Альтаир! Смотри, как интересно получилось!",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/surprise-7": {
@@ -349,8 +349,8 @@
   },
   "ru/surprise-8": {
     "file": "audio/ru/surprise-8.mp3",
-    "hash": "e698e63a93e0",
-    "text": "Вот это да, не ожидал! Давай посмотрим ещё.",
+    "hash": "e34dd425dbc9",
+    "text": "Вот это да, не ожидал, Альтаир! Давай посмотрим ещё.",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/surprise-9": {
@@ -427,8 +427,8 @@
   },
   "ru/victory-1": {
     "file": "audio/ru/victory-1.mp3",
-    "hash": "e09a08495e43",
-    "text": "Победа! Ты собрал все звёзды! Я тобой горжусь!",
+    "hash": "93465ede12bd",
+    "text": "Победа, Альтаир! Ты собрал все звёзды! Я тобой горжусь!",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/victory-2": {
@@ -445,8 +445,8 @@
   },
   "ru/victory-4": {
     "file": "audio/ru/victory-4.mp3",
-    "hash": "ddd210f4cb2c",
-    "text": "Вот это победа! Давай отпразднуем!",
+    "hash": "4e761da79c9c",
+    "text": "Вот это победа, Альтаир! Давай отпразднуем!",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/victory-5": {
@@ -457,8 +457,8 @@
   },
   "ru/victory-6": {
     "file": "audio/ru/victory-6.mp3",
-    "hash": "989457fe346b",
-    "text": "Миссия завершена! Ты был просто супер!",
+    "hash": "9ec307e0e689",
+    "text": "Миссия завершена, Альтаир! Ты был просто супер!",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/victory-7": {
@@ -475,8 +475,8 @@
   },
   "ru/victory-9": {
     "file": "audio/ru/victory-9.mp3",
-    "hash": "29027d78272b",
-    "text": "Какая замечательная победа! Ты молодец!",
+    "hash": "0f63e9b22ad3",
+    "text": "Какая замечательная победа, Альтаир! Ты молодец!",
     "voice": "ru-RU-DmitryNeural"
   },
   "ru/victory-10": {
@@ -505,8 +505,8 @@
   },
   "kk/greeting-2": {
     "file": "audio/kk/greeting-2.mp3",
-    "hash": "bb5adc2dfe85",
-    "text": "Қайырлы таң, досым! Жаңа миссияға дайынсың ба?",
+    "hash": "c591145ae655",
+    "text": "Сәлем, Альтаир! Жаңа миссияға дайынсың ба?",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/greeting-3": {
@@ -517,8 +517,8 @@
   },
   "kk/greeting-4": {
     "file": "audio/kk/greeting-4.mp3",
-    "hash": "1bea7c87cd95",
-    "text": "Сәлем-сәлем! Сен дәл уақытында келдің!",
+    "hash": "e4f3c49da5c0",
+    "text": "Сәлем-сәлем, Альтаир! Сен дәл уақытында келдің!",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/greeting-5": {
@@ -529,14 +529,14 @@
   },
   "kk/greeting-6": {
     "file": "audio/kk/greeting-6.mp3",
-    "hash": "7fa82b7e65a2",
-    "text": "Тамаша, серіктесім! Қайтадан танысайық па?",
+    "hash": "9c645dc820b0",
+    "text": "Тамаша, Альтаир! Қайтадан танысайық па?",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/greeting-7": {
     "file": "audio/kk/greeting-7.mp3",
-    "hash": "7abcc988671e",
-    "text": "Сәлем! Біздің ойындарымызды сағынып қалдым.",
+    "hash": "5c1bd99e4740",
+    "text": "Сәлем, Альтаир! Біздің ойындарымызды сағынып қалдым.",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/greeting-8": {
@@ -547,14 +547,14 @@
   },
   "kk/greeting-9": {
     "file": "audio/kk/greeting-9.mp3",
-    "hash": "55e769d62901",
-    "text": "Ой, менің сүйікті досым келді! Сәлем!",
+    "hash": "48414a4b9836",
+    "text": "Ой, менің сүйікті досым Альтаир келді! Сәлем!",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/greeting-10": {
     "file": "audio/kk/greeting-10.mp3",
-    "hash": "a89683ecba04",
-    "text": "Сәлем! Мен Тобот, сенің осында болғаныңа өте қуаныштымын.",
+    "hash": "d6cbadfcec42",
+    "text": "Сәлем, Альтаир! Мен Тобот, сенің осында болғаныңа өте қуаныштымын.",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/greeting-11": {
@@ -571,8 +571,8 @@
   },
   "kk/talk-1": {
     "file": "audio/kk/talk-1.mp3",
-    "hash": "d0eed529fc6b",
-    "text": "Бірге ойнайық. Мен қасыңда боламын.",
+    "hash": "fe1c41dd3a7f",
+    "text": "Бірге ойнайық, Альтаир. Мен қасыңда боламын.",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/talk-2": {
@@ -583,8 +583,8 @@
   },
   "kk/talk-3": {
     "file": "audio/kk/talk-3.mp3",
-    "hash": "110b60fdd2e1",
-    "text": "Мен түрлі түстерді жақсы көремін. Сен қайсысын жақсы көресің?",
+    "hash": "621f3e604ad3",
+    "text": "Мен түрлі түстерді жақсы көремін, Альтаир. Сен қайсысын жақсы көресің?",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/talk-4": {
@@ -595,8 +595,8 @@
   },
   "kk/talk-5": {
     "file": "audio/kk/talk-5.mp3",
-    "hash": "6320aaa9811a",
-    "text": "Айналада түрлі-түсті заттар қаншама! Байқап тұрсың ба?",
+    "hash": "b151a054fdf3",
+    "text": "Айналада түрлі-түсті заттар қаншама, Альтаир! Байқап тұрсың ба?",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/talk-6": {
@@ -607,8 +607,8 @@
   },
   "kk/talk-7": {
     "file": "audio/kk/talk-7.mp3",
-    "hash": "0f3a59e3c59d",
-    "text": "Кейде сөздерді біраз ұмытып қаламын. Маған көмектесесің бе?",
+    "hash": "799c125bd53a",
+    "text": "Кейде сөздерді біраз ұмытып қаламын, Альтаир. Маған көмектесесің бе?",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/talk-8": {
@@ -619,8 +619,8 @@
   },
   "kk/talk-9": {
     "file": "audio/kk/talk-9.mp3",
-    "hash": "be62b140d8d3",
-    "text": "Қалайсың, мен қалай дүниеге келгенімді айтып берейін бе?",
+    "hash": "f9d307fd6738",
+    "text": "Қалайсың, мен қалай дүниеге келгенімді айтып берейін бе, Альтаир?",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/talk-10": {
@@ -631,8 +631,8 @@
   },
   "kk/talk-11": {
     "file": "audio/kk/talk-11.mp3",
-    "hash": "100ab0064bb8",
-    "text": "Біз сенімен тамаша команда, солай ма?",
+    "hash": "021113b6c929",
+    "text": "Біз сенімен тамаша команда, солай ма, Альтаир?",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/talk-12": {
@@ -643,14 +643,14 @@
   },
   "kk/talk-13": {
     "file": "audio/kk/talk-13.mp3",
-    "hash": "ab37eb96b0b6",
-    "text": "Ой, шытырман оқиғаларға ерекше жақсы күн!",
+    "hash": "2a9f851d8c14",
+    "text": "Ой, шытырман оқиғаларға ерекше жақсы күн, Альтаир!",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/joy-0": {
     "file": "audio/kk/joy-0.mp3",
-    "hash": "529bd4811ca0",
-    "text": "Ура! Дұрыс айттың! Жарайсың!",
+    "hash": "05a63fdb3c61",
+    "text": "Ура, Альтаир! Дұрыс айттың! Жарайсың!",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/joy-1": {
@@ -673,8 +673,8 @@
   },
   "kk/joy-4": {
     "file": "audio/kk/joy-4.mp3",
-    "hash": "f70a983ef6cb",
-    "text": "Керемет! Мен қатты қуанамын! Қол шапалақтаймын!",
+    "hash": "b0ffb4b93298",
+    "text": "Керемет, Альтаир! Мен қатты қуанамын! Қол шапалақтаймын!",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/joy-5": {
@@ -685,8 +685,8 @@
   },
   "kk/joy-6": {
     "file": "audio/kk/joy-6.mp3",
-    "hash": "c0c475246555",
-    "text": "Ура-ура! Бәрі шықты, шықты!",
+    "hash": "9f27d8518b57",
+    "text": "Ура-ура, Альтаир! Бәрі шықты, шықты!",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/joy-7": {
@@ -697,8 +697,8 @@
   },
   "kk/joy-8": {
     "file": "audio/kk/joy-8.mp3",
-    "hash": "e74e46126a33",
-    "text": "Тамаша! Енді сенің не істей алатыныңды анық білемін!",
+    "hash": "02b71e55d4f1",
+    "text": "Тамаша, Альтаир! Енді сенің не істей алатыныңды анық білемін!",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/joy-9": {
@@ -709,8 +709,8 @@
   },
   "kk/joy-10": {
     "file": "audio/kk/joy-10.mp3",
-    "hash": "d319f9bf7d52",
-    "text": "Бинго! Дәл солай!",
+    "hash": "452eee8591b4",
+    "text": "Бинго, Альтаир! Дәл солай!",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/joy-11": {
@@ -721,8 +721,8 @@
   },
   "kk/encourage-0": {
     "file": "audio/kk/encourage-0.mp3",
-    "hash": "c8cc315c5233",
-    "text": "Уайымдама, тағы бір рет көрейік. Сенің қолыңнан келеді!",
+    "hash": "7186b6a8211d",
+    "text": "Уайымдама, тағы бір рет көрейік, Альтаир. Сенің қолыңнан келеді!",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/encourage-1": {
@@ -739,8 +739,8 @@
   },
   "kk/encourage-3": {
     "file": "audio/kk/encourage-3.mp3",
-    "hash": "6ea567c4c943",
-    "text": "Бәрі қателеседі, роботтар да! Қайтадан көрейік.",
+    "hash": "a8375322f2d9",
+    "text": "Бәрі қателеседі, роботтар да, Альтаир! Қайтадан көрейік.",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/encourage-4": {
@@ -751,8 +751,8 @@
   },
   "kk/encourage-5": {
     "file": "audio/kk/encourage-5.mp3",
-    "hash": "00ab7d59cf00",
-    "text": "Асықпа. Ойлан да, сабырмен айт.",
+    "hash": "0e56c3d45588",
+    "text": "Асықпа, Альтаир. Ойлан да, сабырмен айт.",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/encourage-6": {
@@ -763,8 +763,8 @@
   },
   "kk/encourage-7": {
     "file": "audio/kk/encourage-7.mp3",
-    "hash": "ea05e0d509c3",
-    "text": "Ештеңе, келесі жолы міндетті түрде шығады!",
+    "hash": "9c8a75ab046c",
+    "text": "Ештеңе, келесі жолы міндетті түрде шығады, Альтаир!",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/encourage-8": {
@@ -775,8 +775,8 @@
   },
   "kk/encourage-9": {
     "file": "audio/kk/encourage-9.mp3",
-    "hash": "e5904abe5c45",
-    "text": "Бірге істейік, мен алдымен айтамын, сен менің соңымнан қайтала.",
+    "hash": "a70ff5ab9f41",
+    "text": "Бірге істейік, мен алдымен айтамын, сен менің соңымнан қайтала, Альтаир.",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/encourage-10": {
@@ -787,14 +787,14 @@
   },
   "kk/encourage-11": {
     "file": "audio/kk/encourage-11.mp3",
-    "hash": "aadc6e12357d",
-    "text": "Тағы бір рет көр, қажет болса, мен көмектесемін.",
+    "hash": "d40bd60cb285",
+    "text": "Тағы бір рет көр, қажет болса, мен көмектесемін, Альтаир.",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/surprise-0": {
     "file": "audio/kk/surprise-0.mp3",
-    "hash": "3eb7788730e5",
-    "text": "Ой! Бұл басқа түс сияқты. Тағы бір қарап көрейік пе?",
+    "hash": "7c615fafe34e",
+    "text": "Ой, Альтаир! Бұл басқа түс сияқты. Тағы бір қарап көрейік пе?",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/surprise-1": {
@@ -805,8 +805,8 @@
   },
   "kk/surprise-2": {
     "file": "audio/kk/surprise-2.mp3",
-    "hash": "17aa10f43f0e",
-    "text": "Ой-ой! Мен де кейде шатастырамын. Мұқият қара!",
+    "hash": "902d58c8122f",
+    "text": "Ой-ой, Альтаир! Мен де кейде шатастырамын. Мұқият қара!",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/surprise-3": {
@@ -817,8 +817,8 @@
   },
   "kk/surprise-4": {
     "file": "audio/kk/surprise-4.mp3",
-    "hash": "20e9b6fc5a84",
-    "text": "Ой, бұл не? Бірге анықтайық!",
+    "hash": "99d4042e0ac0",
+    "text": "Ой, бұл не, Альтаир? Бірге анықтайық!",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/surprise-5": {
@@ -829,8 +829,8 @@
   },
   "kk/surprise-6": {
     "file": "audio/kk/surprise-6.mp3",
-    "hash": "b57585901369",
-    "text": "Ух! Қараңдаршы, қандай қызық шықты!",
+    "hash": "da5f770ff8b8",
+    "text": "Ух, Альтаир! Қараңдаршы, қандай қызық шықты!",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/surprise-7": {
@@ -841,8 +841,8 @@
   },
   "kk/surprise-8": {
     "file": "audio/kk/surprise-8.mp3",
-    "hash": "61379f4f729d",
-    "text": "Міне, солай да! Күтпеген едім. Тағы қарайық.",
+    "hash": "a579fd75adb0",
+    "text": "Міне, солай да, Альтаир! Күтпеген едім. Тағы қарайық.",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/surprise-9": {
@@ -919,8 +919,8 @@
   },
   "kk/victory-1": {
     "file": "audio/kk/victory-1.mp3",
-    "hash": "dd7a11453c59",
-    "text": "Жеңіс! Барлық жұлдызды жинадың! Мен сенімен мақтанамын!",
+    "hash": "660ea7d32f74",
+    "text": "Жеңіс, Альтаир! Барлық жұлдызды жинадың! Мен сенімен мақтанамын!",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/victory-2": {
@@ -937,8 +937,8 @@
   },
   "kk/victory-4": {
     "file": "audio/kk/victory-4.mp3",
-    "hash": "96aca9b9b207",
-    "text": "Міне, жеңіс! Мереке жасайық!",
+    "hash": "23e62fa69d8b",
+    "text": "Міне, жеңіс, Альтаир! Мереке жасайық!",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/victory-5": {
@@ -949,8 +949,8 @@
   },
   "kk/victory-6": {
     "file": "audio/kk/victory-6.mp3",
-    "hash": "18e6f7c8a8f9",
-    "text": "Миссия аяқталды! Сен тіпті тамаша болдың!",
+    "hash": "909da7196f0b",
+    "text": "Миссия аяқталды, Альтаир! Сен тіпті тамаша болдың!",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/victory-7": {
@@ -967,8 +967,8 @@
   },
   "kk/victory-9": {
     "file": "audio/kk/victory-9.mp3",
-    "hash": "f1785948cdc0",
-    "text": "Қандай ғажап жеңіс! Жарайсың!",
+    "hash": "0c40270e12b1",
+    "text": "Қандай ғажап жеңіс, Альтаир! Жарайсың!",
     "voice": "kk-KZ-DauletNeural"
   },
   "kk/victory-10": {
