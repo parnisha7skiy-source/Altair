@@ -8,7 +8,7 @@ on:
         type: boolean
         default: false
       styles:
-        description: 'Эмоциональные стили Azure (joy, victory, greeting)'
+        description: 'Эмоциональные стили (только если задан ключ Azure)'
         type: boolean
         default: false
 
@@ -27,7 +27,10 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Синтезировать озвучку через Azure
+      - name: Установить edge-tts
+        run: pip install edge-tts
+
+      - name: Синтезировать озвучку (Azure, если заданы секреты, иначе бесплатный edge-tts)
         env:
           AZURE_SPEECH_KEY: ${{ secrets.AZURE_SPEECH_KEY }}
           AZURE_SPEECH_REGION: ${{ secrets.AZURE_SPEECH_REGION }}

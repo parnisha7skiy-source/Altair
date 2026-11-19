@@ -24,6 +24,12 @@ export function audioReady(lang) {
   return Object.keys(MANIFEST).some((k) => k.startsWith(lang + '/'));
 }
 
+// озвучка задания игры по точному тексту (ключ манифеста prompt|<язык>|<текст>)
+export function audioForText(lang, text) {
+  const e = MANIFEST[`prompt|${lang}|${text}`];
+  return e ? e.file : null;
+}
+
 function nextIndex(key, n) {
   let bag = bags[key];
   if (!bag || bag.length === 0) {

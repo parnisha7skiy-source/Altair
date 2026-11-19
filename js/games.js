@@ -29,3 +29,15 @@ export function runGame(id, ctx) {
   if (id === 'balloons') return runBalloons(base);
   return runChoice({ ...base, id });
 }
+
+// Все задания игр как тексты — для озвучки (tools/generate_voices.py). Порядок не важен.
+export function allPrompts(lang) {
+  const gt = GT[lang], u = UI[lang], out = [];
+  for (const o of Object.values(u.objects)) out.push(u.promptColor.replace('{o}', o));
+  for (const o of Object.values(gt.countObjs)) out.push(gt.countQ.replace('{o}', o));
+  for (const o of Object.values(gt.shapes)) out.push(gt.shapeQ.replace('{o}', o));
+  for (const s of Object.values(gt.sounds)) out.push(gt.animalQ.replace('{s}', s));
+  for (const o of Object.values(gt.balloonColors)) out.push(gt.balloonQ.replace('{o}', o));
+  out.push(gt.oddQ, gt.memoryQ);
+  return [...new Set(out)];
+}

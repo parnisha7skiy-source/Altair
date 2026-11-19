@@ -138,7 +138,7 @@
 import * as THREE from 'three';
 import { TobotCharacter } from './js/tobot-character.js';
 import { UI, LANGS, initialLang, saveLang } from './js/i18n.js';
-import { loadPhrases, pickLine, pickMixed, audioReady } from './js/tobot-lines.js';
+import { loadPhrases, pickLine, pickMixed, audioReady, audioForText } from './js/tobot-lines.js';
 import { GAMES, ADVENTURE, gameName, runGame } from './js/games.js';
 import { GT } from './js/game-text.js';
 
@@ -289,7 +289,7 @@ function startGame(id, { adventure = false } = {}) {
     host: document.body,
     lang,
     level,
-    say: (type, text) => speakLine(text ? { type, lang, text } : pickLine(lang, type)),
+    say: (type, text) => speakLine(text ? { type, lang, text, audio: audioForText(lang, text) } : pickLine(lang, type)),
     onCorrect: (c) => {
       progress.stars++;
       if (typeof c === 'string' && /^[a-z]+$/.test(c) && !progress.colors.includes(c) && id !== 'shapes' && id !== 'animals') progress.colors.push(c);
