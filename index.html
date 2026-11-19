@@ -275,7 +275,8 @@ function startColors() {
 }
 $('colorsBtn').onclick = startColors;
 
-$('startBtn').onclick = () => { greet(); toast(t('soonToast')); };
+// «Начать приключение» пока ведёт в единственную готовую миссию — «Учить цвета»
+$('startBtn').onclick = () => startColors();
 $('rewardsBtn').onclick = () => { renderProgress(); $('sheet').classList.add('show'); };
 $('closeSheet').onclick = () => $('sheet').classList.remove('show');
 $('sheet').onclick = (e) => { if (e.target.id === 'sheet') $('sheet').classList.remove('show'); };

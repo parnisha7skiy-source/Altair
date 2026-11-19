@@ -24,10 +24,11 @@ function shuffle(arr, rng) {
 }
 
 // один раунд: загаданный цвет и варианты (всегда содержат загаданный)
-export function buildRound(missions, rng = Math.random) {
+// target можно передать заранее (см. колоду в runColorsMission)
+export function buildRound(missions, rng = Math.random, target = null) {
   const pool = COLOR_ORDER.slice(0, poolSize(missions));
   const optionCount = Math.min(6, pool.length);
-  const target = pool[Math.floor(rng() * pool.length)];
+  if (!target) target = pool[Math.floor(rng() * pool.length)];
   const others = shuffle(pool.filter((c) => c !== target), rng).slice(0, optionCount - 1);
   return { target, options: shuffle([target, ...others], rng) };
 }
@@ -40,6 +41,18 @@ export function runColorsMission({ host, strings: s, lang, missions, say, onCorr
   const name = (c) => s.colorNames[c];
   const promptFor = (c) => s.promptColor.replace('{c}', name(c));
   let round = 0, stars = 0, busy = true, target = null, timers = [];
+  // колода: каждый цвет выпадает по одному разу, потом колода перемешивается заново;
+  // первый цвет новой колоды не совпадает с предыдущим
+  let bag = [], last = null;
+  const pool = COLOR_ORDER.slice(0, poolSize(missions));
+  function nextTarget() {
+    if (!bag.length) {
+      bag = shuffle(pool, Math.random);
+      if (bag.length > 1 && bag[0] === last) bag.push(bag.shift());
+    }
+    last = bag.shift();
+    return last;
+  }
 
   const root = document.createElement('div');
   root.className = 'mission show';
@@ -60,7 +73,7 @@ export function runColorsMission({ host, strings: s, lang, missions, say, onCorr
   function later(fn, ms) { timers.push(setTimeout(fn, ms)); }
 
   function ask() {
-    const { target: tg, options } = buildRound(missions);
+    const { target: tg, options } = buildRound(missions, Math.random, nextTarget());
     target = tg;
     busy = false;
     q('round').textContent = `${round + 1}/${ROUNDS}`;
